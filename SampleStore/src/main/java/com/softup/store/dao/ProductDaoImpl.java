@@ -18,6 +18,10 @@ public class ProductDaoImpl implements ProductDao {
 	@Autowired
 	SessionFactory sessionFactory;
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	protected Session session() {
 		try {
 			return sessionFactory.getCurrentSession();
