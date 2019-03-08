@@ -45,7 +45,7 @@
 	<!-- set default userdetailsService to extract user details from database -->
 	<authentication-manager>
 		<authentication-provider
-			user-service-ref="myUserDetailsService">
+			user-service-ref="storeUserDetailsService">
 			<password-encoder ref="encoder" />
 		</authentication-provider>
 	</authentication-manager>
