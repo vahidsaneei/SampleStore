@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.softup.store.interfaces.UserDao;
@@ -16,6 +17,17 @@ public class UserDaoImpl implements UserDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
+
+	@Autowired
+	PasswordEncoder encoder;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public void setEncoder(PasswordEncoder encoder) {
+		this.encoder = encoder;
+	}
 
 	protected Session session() {
 		try {
