@@ -5,9 +5,6 @@
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<display-name>SampleStore</display-name>
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
 
 	<servlet>
 		<servlet-name>storeServlet</servlet-name>
@@ -20,14 +17,14 @@
 	</servlet-mapping>
 
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListner</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/spring-database.xml
-			/WEB-INF/spring-security.xml
+			WEB-INF/spring-database.xml
+			WEB-INF/spring-security.xml
 		</param-value>
 	</context-param>
 
