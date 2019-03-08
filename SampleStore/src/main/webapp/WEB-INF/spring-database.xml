@@ -53,20 +53,20 @@
 	<bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
-	<bean id="userDao" class="com.softup.dao.UserDaoImpl">
+	<bean id="userDao" class="com.softup.store.dao.UserDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="encoder" ref="encoder" />
 	</bean>
 
-	<bean id="myUserDetailsService"
-		class="com.softup.service.MyUserDetailsService">
+	<bean id="storeUserDetailsService"
+		class="com.softup.store.service.StoreUserDetailsService">
 		<property name="userDao" ref="userDao" />
 	</bean>
 
 <!-- 	<bean id="productService" -->
 <!-- 		class="com.softup.service.ProductServiceImpl" /> -->
 
-	<bean id="userService" class="com.softup.service.UserServiceImpl">
+	<bean id="userService" class="com.softup.store.service.UserServiceImpl">
 		<property name="userDao" ref="userDao" />
 	</bean>
 
@@ -75,6 +75,7 @@
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
 	<tx:annotation-driven />
 	<tx:advice id="txAdvice"
 		transaction-manager="transactionManager">
@@ -87,7 +88,7 @@
 
 	<aop:config>
 		<aop:pointcut id="userServicePointCut"
-			expression="execution(* com.softup.service.*Service.*(..))" />
+			expression="execution(* com.softup.store.service.*Service.*(..))" />
 		<aop:advisor advice-ref="txAdvice"
 			pointcut-ref="userServicePointCut" />
 	</aop:config>
