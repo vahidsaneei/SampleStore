@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.models.Product;
+import com.softup.store.models.User;
 
 @Controller
 @EnableWebMvc
@@ -45,7 +46,14 @@ public class StoreController {
 			model.addObject("msg", "You've been logged out successfully.");
 		}
 		return model;
+	}
 
+	@RequestMapping(value = "register", method = RequestMethod.GET)
+	public ModelAndView registerCustomer() {
+		ModelAndView model = new ModelAndView("newuser");
+		User user = new User();
+		model.addObject("user", user);
+		return model;
 	}
 
 }
