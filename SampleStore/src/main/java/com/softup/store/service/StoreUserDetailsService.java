@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.softup.store.interfaces.UserDao;
 
+@Service(value = "storeUserDetailsService")
 @Transactional(readOnly = true)
-@Service("myUserDetailsService")
 public class StoreUserDetailsService implements UserDetailsService {
 
 	@Autowired
