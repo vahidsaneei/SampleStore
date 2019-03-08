@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -29,6 +30,22 @@ public class StoreController {
 		List<Product> products = productService.getAllProducts();
 		model.addObject("products", products);
 		return model;
+	}
+
+	@RequestMapping(value = "login", method = RequestMethod.GET)
+	public ModelAndView getLogin(@RequestParam(name = "error", required = false) String error,
+			@RequestParam(name = "logout", required = false) String logout) {
+
+		ModelAndView model = new ModelAndView("loginForm");
+
+		if (error != null) {
+			model.addObject("error", "invalid username or password");
+		}
+		if (logout != null) {
+			model.addObject("msg", "You've been logged out successfully.");
+		}
+		return model;
+
 	}
 
 }
