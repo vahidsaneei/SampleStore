@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.softup.store.interfaces.ProductService;
+import com.softup.store.interfaces.UserService;
 import com.softup.store.models.Product;
 
 @Controller
@@ -23,6 +24,13 @@ public class ProductsController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private UserService userService;
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
