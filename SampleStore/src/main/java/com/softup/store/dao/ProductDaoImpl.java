@@ -1,5 +1,6 @@
 package com.softup.store.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -45,6 +46,61 @@ public class ProductDaoImpl implements ProductDao {
 		List<Product> products = session().createCriteria(Product.class).add(Restrictions.like("fullname", param))
 				.list();
 		return products;
+	}
+
+	public List<Product> getNewestProducts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> getPopularProducts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> limitPrice(BigDecimal start, BigDecimal end) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> expireInNextDay(Integer num) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> getProductFromStore(String storename) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> mostCommentedProduct() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Product> mostOrdered() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void rechargeProduct(Product product, Integer quantity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<Product> emptyProducts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String addProduct(Product product) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String removeProduct(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
