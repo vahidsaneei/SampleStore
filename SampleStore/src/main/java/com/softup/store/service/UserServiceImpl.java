@@ -36,4 +36,52 @@ public class UserServiceImpl implements UserService {
 		return userDao.getAllUsers();
 	}
 
+	@Transactional
+	public User findById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> findByAddress(String address) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> findByPhoneNumber(String number) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> getDisabledUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> getExpiredUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> getLockedUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public List<User> getExpireCredentialUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	public void resetPassword(User user, String newPass) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

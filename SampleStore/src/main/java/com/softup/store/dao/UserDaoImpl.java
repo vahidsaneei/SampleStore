@@ -72,4 +72,44 @@ public class UserDaoImpl implements UserDao {
 		return users;
 	}
 
+	public User findById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> findByAddress(String address) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> findByPhoneNumber(String number) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> getDisabledUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> getExpiredUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> getLockedUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<User> getExpireCredentialUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void resetPassword(User user, String newPass) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
