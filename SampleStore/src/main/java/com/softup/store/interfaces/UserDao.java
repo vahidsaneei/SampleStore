@@ -12,4 +12,19 @@ public interface UserDao {
 
 	List<User> getAllUsers();
 
+	User findById(long id);
+
+	List<User> findByAddress(String address);
+
+	List<User> findByPhoneNumber(String number);
+
+	List<User> getDisabledUser();
+
+	List<User> getExpiredUser();
+
+	List<User> getLockedUser();
+
+	List<User> getExpireCredentialUser();
+
+	void resetPassword(User user, String newPass);
 }
