@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
@@ -92,15 +91,15 @@
 										<tr>
 											<td colspan="4">Company :${product.companyName}</td>
 										</tr>
-										<c:if test="${product.seller!=null }">
+										<c:if test="${product.quantity > 0 }">
 											<tr>
-												<td colspan="4">Store name :<a
-													href="${pageContext.request.contextPath }/sellers/${product.seller }">${product.seller}</a></td>
+												<td colspan="4">Price :${product.price }</td>
 											</tr>
 										</c:if>
-										<c:if test="${product.seller=='' }">
+										<c:if test="${product.quantity==0 }">
 											<tr>
-												<td colspan="4">Store name : Not found</td>
+												<td colspan="4"><p style="color: red;">Not
+														available</p></td>
 											</tr>
 										</c:if>
 										<tr>
