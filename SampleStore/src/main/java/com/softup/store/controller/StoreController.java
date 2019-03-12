@@ -1,9 +1,11 @@
 package com.softup.store.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +55,17 @@ public class StoreController {
 		ModelAndView model = new ModelAndView("newuser");
 		User user = new User();
 		model.addObject("user", user);
+		return model;
+	}
+
+	@RequestMapping(value = "/addtocartlist/{id}", method = RequestMethod.GET)
+	public ModelAndView addToCart(@PathVariable("id") Long id) {
+		ModelAndView model = new ModelAndView("addtocartlist");
+		List<Product> products = new ArrayList<Product>();
+		Product p = productService.findById(id);
+		products.add(p);
+		model.addObject("products", products);
+
 		return model;
 	}
 
