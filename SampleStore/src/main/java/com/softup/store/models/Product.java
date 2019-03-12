@@ -66,7 +66,7 @@ public class Product implements Serializable {
 	private String description;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "products")
-	private List<Order> orders = new ArrayList<Order>();
+	private List<Orders> orders = new ArrayList<Orders>();
 
 	public Product(String fullName, String companyName, Date expiryDate, Integer quantity, BigDecimal price,
 			String description) {
@@ -113,11 +113,11 @@ public class Product implements Serializable {
 		this.insertDate = insertDate;
 	}
 
-	public List<Order> getOrders() {
+	public List<Orders> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(List<Order> orders) {
+	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
 
