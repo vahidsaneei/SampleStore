@@ -64,7 +64,7 @@ public class User implements Serializable, UserDetails {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Comment> comments = new ArrayList<Comment>();
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-	private List<Order> orders = new ArrayList<Order>();
+	private List<Orders> orders = new ArrayList<Orders>();
 
 	public User() {
 	}
@@ -166,11 +166,11 @@ public class User implements Serializable, UserDetails {
 		this.comments = comments;
 	}
 
-	public List<Order> getOrders() {
+	public List<Orders> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(List<Order> orders) {
+	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
 
