@@ -27,7 +27,7 @@
 </head>
 <body>
 	<center>
-		<c:set var="appurl" value="${pageContext.request.contextPath }/" />
+		<c:set var="appurl" value="${pageContext.request.contextPath }" />
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
@@ -44,13 +44,13 @@
 				<li><a id="cartlink" href="addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="products"><span
+					<li><a href="${appurl }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="newerproducts"><span
+					<li><a href="${appurl }/users"><span
 							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="searchpage"><span
+					<li><a href="${appurl }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="searchpage"><span
+					<li><a href="${appurl }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
 				<li><a href="searchpage"><span
