@@ -86,5 +86,9 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> emptyProducts() {
 		return productDao.emptyProducts();
 	}
+	@Transactional
+	public String updateProduct(Product product) {
+		return productDao.updateProduct(product);
+	}
 
 }
