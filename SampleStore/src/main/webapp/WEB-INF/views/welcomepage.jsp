@@ -41,8 +41,9 @@
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
+					<li><a href="user/showprofile"><span
+							class="glyphicon glyphicon-user">Dear, <sec:authentication
+									property="name" />
 						</span></a></li>
 					<li><a href="${logoutUrl }" onclick="logoutPerform();"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
