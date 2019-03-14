@@ -50,10 +50,10 @@ public class ProductsController {
 		return model;
 	}
 
-	@RequestMapping(value = "/products/editproduct/", method = RequestMethod.GET)
-	public ModelAndView editProduct() {
+	@RequestMapping(value = "/products/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView editProduct(@PathVariable("id") Long id) {
 		ModelAndView model = new ModelAndView("newproduct");
-		Product product = new Product();
+		Product product = productService.findById(id);
 		model.addObject("product", product);
 
 		return model;
@@ -61,7 +61,7 @@ public class ProductsController {
 
 	@RequestMapping(value = "/products/remove/{id}", method = RequestMethod.GET)
 	public ModelAndView removeProduct(@PathVariable("id") String id) {
-		ModelAndView model = new ModelAndView("productList");
+		ModelAndView model = new ModelAndView("redirect:/products");
 		Long pid = Long.parseLong(id);
 		productService.removeProduct(pid);
 		model.addObject("message", "product with id :" + id + " have been removed");
@@ -72,10 +72,17 @@ public class ProductsController {
 	public ModelAndView saveProduct(@ModelAttribute Product product) {
 
 		ModelAndView model = new ModelAndView();
+		String result = "";
 
-		String result = productService.addProduct(product);
+		if (product.getId() == null) {
+			result = productService.addProduct(product);
+		} else {
+			result = productService.updateProduct(product);
+		}
+
 		if (result.toLowerCase().startsWith("error")) {
 			model.setViewName("newproducts");
+			model.addObject("product", product);
 			model.addObject("error", result);
 		} else {
 			model.getModelMap().clear();
