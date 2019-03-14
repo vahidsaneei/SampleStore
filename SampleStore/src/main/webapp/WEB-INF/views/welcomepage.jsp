@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
@@ -43,7 +44,7 @@
 					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
 								<sec:authentication property="name" />
 						</span></a></li>
-					<li><a href="${logoutUrl }"><span
+					<li><a href="${logoutUrl }" onclick="logoutPerform();"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
@@ -112,11 +113,13 @@
 												class="btn btn-default btn-lg"
 												href="javascript:commentProcess(${product.id })"><span
 													class="glyphicon glyphicon-comment"></span> </a></td>
-											<td><a id="cartlink${product.id}"
-												class="btn btn-success btn-lg"
-												onclick="addToCart(${product.id },1)"
-												href="addtocartlist/${product.id }"><span
-													class="glyphicon glyphicon-shopping-cart"></span> </a></td>
+											<td><c:if test="${product.quantity>0 }">
+													<a id="cartlink${product.id}"
+														class="btn btn-success btn-lg"
+														onclick="addToCart(${product.id },1)"
+														href="addtocartlist/${product.id }"><span
+														class="glyphicon glyphicon-shopping-cart"></span> </a>
+												</c:if></td>
 										</tr>
 									</table>
 								</div>
