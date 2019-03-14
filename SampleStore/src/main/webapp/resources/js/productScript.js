@@ -1,5 +1,8 @@
 var appUrl = "http://localhost:8080/springsecurity";
 
+function logoutPerform() {
+	sessionStorage.removeItem('products');
+}
 function sendData(data, targetUrl, method) {
 	var http;
 	if (window.XMLHttpRequest) {
