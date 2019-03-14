@@ -84,7 +84,7 @@
 							<th>Actions</th>
 						</tr>
 					</thead>
-					<c:forEach var="product" items="${productList }">
+					<c:forEach var="product" items="${products }">
 						<tr>
 							<td>${product.fullName }</td>
 							<td>${product.companyName }</td>
