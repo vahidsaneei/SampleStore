@@ -23,10 +23,6 @@ public class StoreController {
 	@Autowired
 	ProductService productService;
 
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
-	}
-
 	@RequestMapping(value = { "/", "index", "home" }, method = RequestMethod.GET)
 	public ModelAndView gethome() {
 		ModelAndView model = new ModelAndView("welcomepage");
