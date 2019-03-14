@@ -18,10 +18,6 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	ProductDao productDao;
 
-	public void setProductDao(ProductDao productDao) {
-		this.productDao = productDao;
-	}
-
 	@Transactional
 	public List<Product> getAllProducts() {
 		return productDao.getAllProducts();
