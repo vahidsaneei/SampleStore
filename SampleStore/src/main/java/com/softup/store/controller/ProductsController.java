@@ -3,6 +3,8 @@ package com.softup.store.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
+import com.softup.store.models.Comment;
 import com.softup.store.models.Product;
 
 @Controller
@@ -27,14 +30,6 @@ public class ProductsController {
 
 	@Autowired
 	private UserService userService;
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
-	}
 
 	@RequestMapping(value = "/products")
 	public ModelAndView getAllProducts() {
@@ -74,20 +69,29 @@ public class ProductsController {
 	}
 
 	@RequestMapping(value = "/products/saveprod", method = RequestMethod.POST)
-	public ModelAndView saveProductt(@ModelAttribute Product product) {
+	public ModelAndView saveProduct(@ModelAttribute Product product) {
 
 		ModelAndView model = new ModelAndView();
 
 		String result = productService.addProduct(product);
-
 		if (result.toLowerCase().startsWith("error")) {
 			model.setViewName("newproducts");
 			model.addObject("error", result);
 		} else {
-			Long id = Long.parseLong(result);
-			product.setId(id);
-			model.setViewName("productList");
+			model.getModelMap().clear();
+			model.setViewName("redirect:/products");
 		}
+		return model;
+	}
+
+	@RequestMapping(value = "/showdetails/{id}", method = RequestMethod.GET)
+	public ModelAndView getProduct(@PathVariable("id") String id, HttpServletRequest request) {
+		ModelAndView model = new ModelAndView("showdetails");
+		Product pr = productService.findById(Long.parseLong(id));
+
+		model.addObject("product", pr);
+		model.addObject("comment", new Comment());
+
 		return model;
 	}
 
