@@ -2,7 +2,7 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	background: #996699;
+	background: darkgray;
 	font-family: sans-serif;
 }
 
@@ -11,7 +11,7 @@ ul {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #634263;
+	background-color: gray;
 }
 
 li {
@@ -27,7 +27,7 @@ li a {
 }
 
 li a:hover {
-	background-color: #631e63;
+	background-color: #7c7c3c;
 }
 
 .container {

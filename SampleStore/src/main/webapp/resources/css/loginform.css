@@ -1,7 +1,7 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	background: #996699;
+	background: darkgray;
 	font-family: sans-serif;
 }
 
@@ -10,7 +10,7 @@ body {
 	margin-bottom: 20px;
 	border: 1px solid transparent;
 	border-radius: 4px;
-	color: #a94442;
+	color: #fb0b47;
 	background-color: #f2dede;
 	border-color: #ebccd1;
 }
@@ -29,7 +29,7 @@ body {
 	width: 300px;
 	padding: 20px;
 	margin: 100px auto;
-	background: #fff;
+	background: #c0c0c0;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border: 1px solid #000;
