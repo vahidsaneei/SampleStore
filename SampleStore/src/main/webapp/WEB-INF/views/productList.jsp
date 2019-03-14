@@ -50,8 +50,8 @@
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<li><a href="products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="users"><span
-							class="glyphicon glyphicon-list">Users Management</span></a></li>
+					<li><a href="users"><span class="glyphicon glyphicon-list">Users
+								Management</span></a></li>
 					<li><a href="orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
 					<li><a href="stores"><span
@@ -65,7 +65,8 @@
 		</div>
 		<div class="container">
 			<center>
-				<a class="btn btn-info" href="${url }/products/newprod">Add new product</a>
+				<a class="btn btn-info" href="${url }/products/newprod">Add new
+					product</a>
 			</center>
 		</div>
 		<div class="container">
@@ -95,7 +96,9 @@
 							<td>${product.quantity }</td>
 							<td>${product.description }</td>
 							<td colspan="2"><div class="btn-group-vertical">
-									<a href="#" class="btn btn-danger">Delete</a> <a href="#"
+									<a href="${url }/products/remove/${product.id }"
+										class="btn btn-danger">Delete</a> <a
+										href="${url }/products/edit/${product.id }"
 										class="btn btn-warning">Edit</a>
 								</div></td>
 						</tr>
