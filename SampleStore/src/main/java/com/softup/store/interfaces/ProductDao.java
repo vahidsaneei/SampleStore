@@ -13,6 +13,8 @@ public interface ProductDao {
 	String addProduct(Product product);
 
 	String removeProduct(Long id);
+	
+	String updateProduct(Product product);
 
 	List<Product> findByName(String name);
 
@@ -30,7 +32,7 @@ public interface ProductDao {
 
 	List<Product> mostOrdered();
 
-	void rechargeProduct(Product product, Integer quantity);
+	String rechargeProduct(Product product, Integer quantity);
 
 	List<Product> emptyProducts();
 }

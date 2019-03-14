@@ -14,6 +14,8 @@ public interface ProductService {
 	String addProduct(Product product);
 
 	String removeProduct(Long id);
+	
+	String updateProduct(Product product);
 
 	List<Product> findByName(String name);
 
