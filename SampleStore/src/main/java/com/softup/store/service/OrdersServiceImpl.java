@@ -20,10 +20,6 @@ public class OrdersServiceImpl implements OrderService {
 	@Autowired
 	OrdersDao ordersDao;
 
-	public void setOrdersDao(OrdersDao ordersDao) {
-		this.ordersDao = ordersDao;
-	}
-
 	@Transactional(readOnly = true)
 	public Orders findById(Long id) {
 		return ordersDao.findById(id);

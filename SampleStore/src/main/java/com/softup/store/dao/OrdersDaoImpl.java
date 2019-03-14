@@ -22,10 +22,6 @@ public class OrdersDaoImpl implements OrdersDao {
 	@Autowired
 	SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
 	protected Session session() {
 		try {
 			return sessionFactory.getCurrentSession();
