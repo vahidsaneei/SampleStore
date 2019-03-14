@@ -10,7 +10,14 @@
 <c:url var="cssUrl" value="/resources/css/" />
 <c:url var="jsUrl" value="/resources/js/" />
 <c:url var="imagesUrl" value="/resources/images/" />
-
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="${cssUrl }bootstrap.min.css">
+<link rel="stylesheet" href="${cssUrl }welcomstyle.css">
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
 <title>Cart list</title>
 <script type="text/javascript" src="${jsUrl }productScript.js">
 </script>
