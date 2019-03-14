@@ -21,6 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "orders")
 public class Orders implements Serializable {
 
+
 	private static final long serialVersionUID = -3672662224925418969L;
 
 	@Id
@@ -57,6 +58,12 @@ public class Orders implements Serializable {
 	public Orders(Date deliveryDate, List<Product> products, User user) {
 		this.orderDate = new Date();
 		this.deliveryDate = deliveryDate;
+		this.products = products;
+		this.user = user;
+	}
+	
+	public Orders(List<Product> products, User user) {
+		this.orderDate = new Date();
 		this.products = products;
 		this.user = user;
 	}
