@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.softup.store.interfaces.UserDao;
 import com.softup.store.models.User;
 
-@Repository(value = "userDao")
+@Repository
 public class UserDaoImpl implements UserDao {
 
 	@Autowired
@@ -20,14 +20,6 @@ public class UserDaoImpl implements UserDao {
 
 	@Autowired
 	PasswordEncoder encoder;
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	public void setEncoder(PasswordEncoder encoder) {
-		this.encoder = encoder;
-	}
 
 	protected Session session() {
 		try {
