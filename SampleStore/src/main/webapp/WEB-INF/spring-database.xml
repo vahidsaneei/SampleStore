@@ -56,19 +56,18 @@
 		<property name="packagesToScan" value="com.softup.*" />
 	</bean>
 
+	<!-- autowired component -->
 	<bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-
 	<bean id="userDao" class="com.softup.store.dao.UserDaoImpl" />
-
 	<bean id="storeUserDetailsService"
-		class="com.softup.store.service.StoreUserDetailsService">
-	</bean>
-
+		class="com.softup.store.service.StoreUserDetailsService" />
 	<bean id="userService"
-		class="com.softup.store.service.UserServiceImpl">
-	</bean>
-
+		class="com.softup.store.service.UserServiceImpl" />
+	<bean id="orderService"
+		class="com.softup.store.service.OrdersServiceImpl" />
+	<bean id="ordersDao" class="com.softup.store.dao.OrdersDaoImpl" />
+	
 	<!-- MUST have transaction manager, using aop and aspects -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
