@@ -1,9 +1,6 @@
 package com.softup.store.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
 import com.softup.store.models.Orders;
 import com.softup.store.models.Product;
 import com.softup.store.models.User;
+import com.softup.store.utils.StoreUtils;
 
 @Controller
 @EnableWebMvc
@@ -33,9 +32,10 @@ public class StoreController {
 
 	@Autowired
 	ProductService productService;
-
 	@Autowired
 	UserService userService;
+	@Autowired
+	OrderService orderService;
 
 	@RequestMapping(value = { "/", "index", "home" }, method = RequestMethod.GET)
 	public ModelAndView gethome() {
@@ -95,30 +95,30 @@ public class StoreController {
 	public ModelAndView addOrder(@PathParam(value = "p") String p) {
 
 		ModelAndView model = new ModelAndView("successorder");
-		Map<Product, Integer> products = retriveProduct(p);
-		List<Product> product = new ArrayList<Product>();
+		Map<Product, Integer> setproducts = retriveProduct(p);
+		List<Product> products = new ArrayList<Product>();
 
-		for (Product pr : products.keySet()) {
-			product.add(pr);
+		for (Product pr : setproducts.keySet()) {
+			products.add(pr);
 		}
 
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
 
-		Orders order = new Orders(product, user);
+		Orders order = new Orders(products, user);
 		Date d = new Date();
-		d.setDate(d.getDate() + 3);
+		Date delivery = StoreUtils.deliveryDate(d, 3);
+		order.setOrderDate(d);
+		order.setDeliveryDate(delivery);
+		String addOrders = orderService.addOrders(order);
 
+		if (!addOrders.toLowerCase().contains("error")) {
+			model.addObject("order", order);
+			model.addObject("message", addOrders);
+		} else {
+			model.addObject("error", addOrders);
+		}
 		return model;
-	}
-
-	private void datepicker() throws ParseException {
-		String dt = "2008-01-01"; // Start date
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar c = Calendar.getInstance();
-		c.setTime(sdf.parse(dt));
-		c.add(Calendar.DATE, 1); // number of days to add
-		dt = sdf.format(c.getTime()); // dt is now the new date
 	}
 
 	public Map<Product, Integer> retriveProduct(String productIds) {
