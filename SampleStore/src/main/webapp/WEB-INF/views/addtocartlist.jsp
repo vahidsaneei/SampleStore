@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <c:url var="cssUrl" value="/resources/css/" />
 <c:url var="jsUrl" value="/resources/js/" />
 <c:url var="imagesUrl" value="/resources/images/" />
