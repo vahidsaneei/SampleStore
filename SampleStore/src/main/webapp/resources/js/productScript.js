@@ -59,6 +59,10 @@ function goToCart() {
 	var data = sessionStorage.getItem("products");
 	sendData(data, "/store/completesale?p=" + data, 'GET');
 }
+function addOrder() {
+	var data = sessionStorage.getItem("products");
+	sendData(data, "/store/addorder?p=" + data, 'GET');
+}
 function checkLoggedUser() {
 	var http;
 	var result = {};
