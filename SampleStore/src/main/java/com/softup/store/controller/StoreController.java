@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import com.softup.store.entity.User;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
+import com.softup.store.models.CartItem;
 import com.softup.store.utils.StoreUtils;
 
 @Controller
@@ -67,17 +68,51 @@ public class StoreController {
 		return model;
 	}
 
-	@RequestMapping(value = "/addtocartlist/{id}", method = RequestMethod.GET)
-	public ModelAndView addToCart(@PathVariable("id") Long id, HttpServletRequest request) {
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "removefromcart/{id}", method = RequestMethod.GET)
+	public String removeFromCart(@PathVariable("id") Long id, HttpSession session) {
 
-		ModelAndView model = new ModelAndView("addtocartlist");
-		List<Product> products = new ArrayList<Product>();
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		Integer i = checkItemExist(id, cart);
+		CartItem ci = cart.get(i);
+		cart.remove(ci);
+		session.setAttribute("cart", cart);
+		return "addtocartlist";
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/addtocartlist/{id}", method = RequestMethod.GET)
+	public String addToCart(@PathVariable(value = "id", required = false) Long id, HttpSession session) {
+
 		Product p = productService.findById(id);
 
-		products.add(p);
-		model.addObject("products", products);
+		if (session.getAttribute("cart") == null) {
+			List<CartItem> cart = new ArrayList<CartItem>();
+			cart.add(new CartItem(p, 1));
+			session.setAttribute("cart", cart);
+		} else {
+			List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+			Integer i = checkItemExist(id, cart);
+			if (i == -1)
+				cart.add(new CartItem(p, 1));
+			else {
+				Integer q = cart.get(i).getQuantity() + 1;
+				cart.get(i).setQuantity(q);
+			}
+			session.setAttribute("cart", cart);
+		}
 
-		return model;
+		return "addtocartlist";
+	}
+
+	protected Integer checkItemExist(Long id, List<CartItem> cart) {
+
+		for (int i = 0; i < cart.size(); i++) {
+			System.err.println("----------------------->" + cart.get(i).getProduct().getId());
+			if (cart.get(i).getProduct().getId() == id)
+				return i;
+		}
+		return -1;
 	}
 
 	@RequestMapping(value = "/store/completesale", method = RequestMethod.GET)
