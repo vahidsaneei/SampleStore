@@ -34,10 +34,10 @@
 				</tr>
 				<c:forEach var="product" items="${products }">
 					<tr>
-						<td>${product.key.fullName }</td>
-						<td>${product.key.price }</td>
-						<td>${product.value }</td>
-						<td>${product.key.price }*${product.value }</td>
+						<td>${product.fullName }</td>
+						<td>${product.price }</td>
+						<td>${product.quantity }</td>
+						<td>${product.price }*${product.quantity }</td>
 					</tr>
 				</c:forEach>
 			</table>
