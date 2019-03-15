@@ -1,4 +1,5 @@
 @charset "windows-1256";
+
 body {
 	margin: 0px;
 	padding: 0px;
@@ -30,6 +31,12 @@ li a:hover {
 	background-color: #7c7c3c;
 }
 
+td {
+	text-align: center;
+}
+th{
+	text-align: center;
+}
 .container {
 	width: 90%;
 	margin: 70px auto 0;
