@@ -135,7 +135,7 @@
 							<c:if test="${product.quantity>0 }">
 								<a id="cartlink${product.id}" class="btn btn-success btn-lg"
 									onclick="addToCart(${product.id },1)"
-									href="${appurl }addtocartlist/${product.id }"><span
+									href="${appurl }/addtocartlist/${product.id }"><span
 									class="glyphicon glyphicon-shopping-cart">Add to Cart</span></a>
 							</c:if>
 
