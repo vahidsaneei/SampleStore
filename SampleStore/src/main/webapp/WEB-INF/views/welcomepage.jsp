@@ -83,47 +83,30 @@
 						</div>
 
 						<a href="showdetails/${product.id }">
-							<div class="details">
-								<div class="content">
-									<h4>${product.fullName }</h4>
-									<table border="0">
-										<tr>
-											<td colspan="4">Type :${product.category}</td>
-										</tr>
-										<tr>
-											<td colspan="4">Company :${product.companyName}</td>
-										</tr>
-										<c:if test="${product.quantity > 0 }">
-											<tr>
-												<td colspan="4">Price :${product.price }</td>
+							<div align="center" class="details">
+								<center>
+									<div align="center" class="content">
+										<h2>${product.fullName }</h2>
+										<table border="0">
+											<tr align="center">
+												<td>Type :${product.category}</td>
 											</tr>
-										</c:if>
-										<c:if test="${product.quantity==0 }">
-											<tr>
-												<td colspan="4"><p style="color: red;">Not
-														available</p></td>
+											<tr align="center">
+												<td>Company :${product.companyName}</td>
 											</tr>
-										</c:if>
-										<tr>
-											<td><a id="likelink${product.id}"
-												class="btn btn-default btn-lg"
-												href="javascript:setlike(${product.id })"> <span
-													class="glyphicon glyphicon-heart-empty"></span>
-											</a></td>
-											<td><a id="commentlink${product.id}"
-												class="btn btn-default btn-lg"
-												href="javascript:commentProcess(${product.id })"><span
-													class="glyphicon glyphicon-comment"></span> </a></td>
-											<td><c:if test="${product.quantity>0 }">
-													<a id="cartlink${product.id}"
-														class="btn btn-success btn-lg"
-														onclick="addToCart(${product.id },1)"
-														href="addtocartlist/${product.id }"><span
-														class="glyphicon glyphicon-shopping-cart"></span> </a>
-												</c:if></td>
-										</tr>
-									</table>
-								</div>
+											<c:if test="${product.quantity > 0 }">
+												<tr align="center">
+													<td>Price :${product.price }</td>
+												</tr>
+											</c:if>
+											<c:if test="${product.quantity==0 }">
+												<tr align="center">
+													<td><p style="color: red;">Not available</p></td>
+												</tr>
+											</c:if>
+										</table>
+									</div>
+								</center>
 							</div>
 						</a>
 					</div>
