@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.UserService;
-import com.softup.store.models.User;
 
 @Controller
 @EnableWebMvc

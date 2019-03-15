@@ -2,10 +2,9 @@ package com.softup.store.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.Orders;
+import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
-import com.softup.store.models.Orders;
-import com.softup.store.models.Product;
-import com.softup.store.models.User;
 import com.softup.store.utils.StoreUtils;
 
 @Controller
@@ -69,10 +68,12 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/addtocartlist/{id}", method = RequestMethod.GET)
-	public ModelAndView addToCart(@PathVariable("id") Long id) {
+	public ModelAndView addToCart(@PathVariable("id") Long id, HttpServletRequest request) {
+
 		ModelAndView model = new ModelAndView("addtocartlist");
 		List<Product> products = new ArrayList<Product>();
 		Product p = productService.findById(id);
+
 		products.add(p);
 		model.addObject("products", products);
 
@@ -83,7 +84,7 @@ public class StoreController {
 	public ModelAndView loadOrder(@PathParam(value = "p") String p) {
 
 		ModelAndView model = new ModelAndView("orderbyuser");
-		Map<Product, Integer> products = retriveProduct(p);
+		List<Product> products = retriveProduct(p);
 		model.addObject("products", products);
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
@@ -95,22 +96,27 @@ public class StoreController {
 	public ModelAndView addOrder(@PathParam(value = "p") String p) {
 
 		ModelAndView model = new ModelAndView("successorder");
-		Map<Product, Integer> setproducts = retriveProduct(p);
-		List<Product> products = new ArrayList<Product>();
 
-		for (Product pr : setproducts.keySet()) {
-			products.add(pr);
-		}
+		// create list of products that we have to add in orders
+		List<Product> products = retriveProduct(p);
 
+		// find user by username to set orders userinfo
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
 
+		// new order generated and setter methods invoke
 		Orders order = new Orders(products, user);
 		Date d = new Date();
 		Date delivery = StoreUtils.deliveryDate(d, 3);
 		order.setOrderDate(d);
 		order.setDeliveryDate(delivery);
 		String addOrders = orderService.addOrders(order);
+
+		// change product quantity after adding new order
+		for (Product product : products) {
+			Integer saleQun = product.getQuantity() * (-1);
+			productService.rechargeProduct(product, saleQun);
+		}
 
 		if (!addOrders.toLowerCase().contains("error")) {
 			model.addObject("order", order);
@@ -121,9 +127,9 @@ public class StoreController {
 		return model;
 	}
 
-	public Map<Product, Integer> retriveProduct(String productIds) {
+	public List<Product> retriveProduct(String productIds) {
 
-		Map<Product, Integer> products = new HashMap<Product, Integer>();
+		List<Product> products = new ArrayList<Product>();
 
 		String[] prods = productIds.split(",");
 
@@ -131,7 +137,8 @@ public class StoreController {
 			String[] vars = string.split("-");
 			Long l = Long.parseLong(vars[0]);
 			Product p = productService.findById(l);
-			products.put(p, Integer.parseInt(vars[1]));
+			p.setQuantity(Integer.parseInt(vars[1]));
+			products.add(p);
 		}
 		return products;
 	}

@@ -20,7 +20,7 @@ public class StoreUserDetailsService implements UserDetailsService {
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
-		com.softup.store.models.User user = userDao.findByUsername(username);
+		com.softup.store.entity.User user = userDao.findByUsername(username);
 
 		return new User(user.getUsername(), user.getPassword(), user.isEnabled(), user.isAccountNonExpired(),
 				user.isCredentialsNonExpired(), user.isAccountNonLocked(), user.getAuthorities());

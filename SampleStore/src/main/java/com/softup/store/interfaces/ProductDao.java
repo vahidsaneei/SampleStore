@@ -3,7 +3,7 @@ package com.softup.store.interfaces;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.softup.store.models.Product;
+import com.softup.store.entity.Product;
 
 public interface ProductDao {
 	List<Product> getAllProducts();

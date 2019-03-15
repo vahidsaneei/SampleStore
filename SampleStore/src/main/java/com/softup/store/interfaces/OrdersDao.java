@@ -3,9 +3,11 @@ package com.softup.store.interfaces;
 import java.util.Date;
 import java.util.List;
 
-import com.softup.store.models.Orders;
-import com.softup.store.models.Period;
-import com.softup.store.models.Product;
+import com.softup.store.entity.Orders;
+import com.softup.store.entity.Period;
+import com.softup.store.entity.Product;
+
+
 
 public interface OrdersDao {
 

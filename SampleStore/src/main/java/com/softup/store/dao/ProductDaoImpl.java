@@ -11,8 +11,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.softup.store.entity.Product;
 import com.softup.store.interfaces.ProductDao;
-import com.softup.store.models.Product;
 import com.softup.store.utils.StoreUtils;
 
 @Repository(value = "productDao")
@@ -52,7 +52,7 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	public List<Product> getPopularProducts() {
-		
+
 		return null;
 	}
 

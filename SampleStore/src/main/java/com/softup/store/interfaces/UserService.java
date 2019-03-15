@@ -2,7 +2,7 @@ package com.softup.store.interfaces;
 
 import java.util.List;
 
-import com.softup.store.models.User;
+import com.softup.store.entity.User;
 
 public interface UserService {
 

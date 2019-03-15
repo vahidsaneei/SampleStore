@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.softup.store.entity.Orders;
+import com.softup.store.entity.Period;
+import com.softup.store.entity.Product;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.OrdersDao;
-import com.softup.store.models.Orders;
-import com.softup.store.models.Period;
-import com.softup.store.models.Product;
 
 @Service("orderService")
 @Transactional

@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.softup.store.entity.Product;
 import com.softup.store.interfaces.ProductDao;
 import com.softup.store.interfaces.ProductService;
-import com.softup.store.models.Product;
 
 @Service(value = "productService")
 @Transactional

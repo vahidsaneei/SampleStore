@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.Comment;
+import com.softup.store.entity.Product;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
-import com.softup.store.models.Comment;
-import com.softup.store.models.Product;
 
 @Controller
 @EnableWebMvc
