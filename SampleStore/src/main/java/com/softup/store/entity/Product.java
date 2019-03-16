@@ -2,18 +2,13 @@ package com.softup.store.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -65,8 +60,6 @@ public class Product implements Serializable {
 	@Column(name = "description", nullable = true)
 	private String description;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "products")
-	private List<Orders> orders = new ArrayList<Orders>();
 
 	public Product(String fullName, String companyName, Date expiryDate, Integer quantity, BigDecimal price,
 			String description) {
@@ -111,14 +104,6 @@ public class Product implements Serializable {
 
 	public void setInsertDate(Date insertDate) {
 		this.insertDate = insertDate;
-	}
-
-	public List<Orders> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Orders> orders) {
-		this.orders = orders;
 	}
 
 	public Long getId() {
@@ -226,7 +211,6 @@ public class Product implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((insertDate == null) ? 0 : insertDate.hashCode());
 		result = prime * result + ((likeCount == null) ? 0 : likeCount.hashCode());
-		result = prime * result + ((orders == null) ? 0 : orders.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
 		result = prime * result + ((seller == null) ? 0 : seller.hashCode());
@@ -286,11 +270,6 @@ public class Product implements Serializable {
 			if (other.likeCount != null)
 				return false;
 		} else if (!likeCount.equals(other.likeCount))
-			return false;
-		if (orders == null) {
-			if (other.orders != null)
-				return false;
-		} else if (!orders.equals(other.orders))
 			return false;
 		if (price == null) {
 			if (other.price != null)
