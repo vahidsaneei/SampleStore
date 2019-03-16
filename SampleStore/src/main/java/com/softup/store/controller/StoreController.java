@@ -2,13 +2,16 @@ package com.softup.store.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.CartItem;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
+import com.softup.store.entity.UserRole;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
-import com.softup.store.models.CartItem;
 import com.softup.store.utils.StoreUtils;
 
 @Controller
@@ -64,6 +68,30 @@ public class StoreController {
 		ModelAndView model = new ModelAndView("newuser");
 		User user = new User();
 		model.addObject("user", user);
+		return model;
+	}
+
+	@RequestMapping(value = "/saveuser", method = RequestMethod.POST)
+	public ModelAndView saveNewUser(@ModelAttribute User user) {
+
+		ModelAndView model = new ModelAndView();
+		user.setEnabled(true);
+		user.setAccountNonExpired(true);
+		user.setAccountNonLocked(true);
+		user.setCredentialsNonExpired(true);
+		UserRole role = new UserRole(user, "ROLE_USER");
+		Set<UserRole> roles = new HashSet<UserRole>();
+		roles.add(role);
+		user.setUserRoles(roles);
+
+		String result = userService.addUser(user);
+
+		if (!result.toLowerCase().startsWith("error")) {
+			model.setViewName("loginForm");
+		} else {
+			model.setViewName("newuser");
+			model.addObject("error", result);
+		}
 		return model;
 	}
 
@@ -148,14 +176,9 @@ public class StoreController {
 		// find user by username to set orders userinfo
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
-		List<Product> products=new ArrayList<Product>();
-		
-		for (CartItem cartItem : items) {
-			products.add(cartItem.getProduct());
-		}
-		
+
 		// new order generated and setter methods invoke
-		Orders order = new Orders(products, user);
+		Orders order = new Orders(items, user);
 		Date d = new Date();
 		Date delivery = StoreUtils.deliveryDate(d, 3);
 		order.setOrderDate(d);
@@ -163,14 +186,15 @@ public class StoreController {
 		String addOrders = orderService.addOrders(order);
 
 		// change product quantity after adding new order
-		for (Product product : products) {
-			Integer saleQun = product.getQuantity() * (-1);
-			productService.rechargeProduct(product, saleQun);
+		for (int i = 0; i < items.size(); i++) {
+			Integer qSale = items.get(i).getQuantity() * (-1);
+			productService.rechargeProduct(items.get(i).getProduct(), qSale);
 		}
 
 		if (!addOrders.toLowerCase().contains("error")) {
 			model.addObject("order", order);
 			model.addObject("message", addOrders);
+			session.setAttribute("cart", null);
 		} else {
 			model.addObject("error", addOrders);
 		}
