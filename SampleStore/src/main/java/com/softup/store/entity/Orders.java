@@ -1,6 +1,7 @@
 package com.softup.store.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +22,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "orders")
 public class Orders implements Serializable {
 
-
 	private static final long serialVersionUID = -3672662224925418969L;
 
 	@Id
-	@Column(name = "id", nullable = false)
+	@Column(name = "ord_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
@@ -46,8 +46,8 @@ public class Orders implements Serializable {
 	@Column(name = "cause", nullable = true)
 	private String cancelCause;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Product> products;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
+	private List<CartItem> items = new ArrayList<CartItem>();
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private User user;
@@ -55,16 +55,16 @@ public class Orders implements Serializable {
 	public Orders() {
 	}
 
-	public Orders(Date deliveryDate, List<Product> products, User user) {
+	public Orders(Date deliveryDate, List<CartItem> items, User user) {
 		this.orderDate = new Date();
 		this.deliveryDate = deliveryDate;
-		this.products = products;
+		this.items = items;
 		this.user = user;
 	}
-	
-	public Orders(List<Product> products, User user) {
+
+	public Orders(List<CartItem> items, User user) {
 		this.orderDate = new Date();
-		this.products = products;
+		this.items = items;
 		this.user = user;
 	}
 
@@ -92,14 +92,6 @@ public class Orders implements Serializable {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -118,8 +110,8 @@ public class Orders implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + ", products="
-				+ products + ", user=" + user + "]";
+		return "Order [id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + ", user=" + user
+				+ "]";
 	}
 
 	public boolean isCanceled() {
@@ -142,10 +134,13 @@ public class Orders implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((cancelCause == null) ? 0 : cancelCause.hashCode());
+		result = prime * result + (canceled ? 1231 : 1237);
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		result = prime * result + ((orderDate == null) ? 0 : orderDate.hashCode());
-		result = prime * result + ((products == null) ? 0 : products.hashCode());
+		result = prime * result + (success ? 1231 : 1237);
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
@@ -159,6 +154,13 @@ public class Orders implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Orders other = (Orders) obj;
+		if (cancelCause == null) {
+			if (other.cancelCause != null)
+				return false;
+		} else if (!cancelCause.equals(other.cancelCause))
+			return false;
+		if (canceled != other.canceled)
+			return false;
 		if (deliveryDate == null) {
 			if (other.deliveryDate != null)
 				return false;
@@ -169,15 +171,17 @@ public class Orders implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (items == null) {
+			if (other.items != null)
+				return false;
+		} else if (!items.equals(other.items))
+			return false;
 		if (orderDate == null) {
 			if (other.orderDate != null)
 				return false;
 		} else if (!orderDate.equals(other.orderDate))
 			return false;
-		if (products == null) {
-			if (other.products != null)
-				return false;
-		} else if (!products.equals(other.products))
+		if (success != other.success)
 			return false;
 		if (user == null) {
 			if (other.user != null)
@@ -186,4 +190,13 @@ public class Orders implements Serializable {
 			return false;
 		return true;
 	}
+
+	public List<CartItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<CartItem> items) {
+		this.items = items;
+	}
+
 }

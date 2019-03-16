@@ -77,13 +77,17 @@ public class OrdersDaoImpl implements OrdersDao {
 		try {
 			session().save(orders);
 			result = "success";
-			session().flush();
 
 		} catch (Exception e) {
-			if (e.getCause().getMessage().toLowerCase().contains("duplicate"))
-				result = "error this  order already was exist";
-			else
-				result = "error " + e.getCause().getMessage();
+			if (e.getCause() != null)
+				if (e.getCause().getMessage().toLowerCase().contains("duplicate"))
+					result = "error this  order already was exist";
+				else
+					result = "error " + e.getCause().getMessage();
+			else {
+				result = "error " + e.getMessage();
+				System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + result);
+			}
 		} finally {
 			session().clear();
 		}
