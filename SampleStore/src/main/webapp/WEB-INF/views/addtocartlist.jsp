@@ -44,7 +44,7 @@
 					<li><a href="${pageContext.request.contextPath }/login"><span
 							class="glyphicon glyphicon-user">Login</span></a></li>
 				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
+				<li><a id="cartlink" href="${appurl }/addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<li><a href="${appurl }/products"><span
@@ -64,50 +64,53 @@
 		</div>
 		<h1>list of sales</h1>
 		<div align="center">
-			<c:if test="${message==null }">
-				<table border="2">
-					<tr>
-						<th>name</th>
-						<th>company</th>
-						<th>price</th>
-						<th>quantity</th>
-						<th>total fee</th>
-						<th>action</th>
-					</tr>
-					<c:set var="total" value="0"></c:set>
-					<c:forEach var="item" items="${ sessionScope.cart}">
-						<c:set var="total"
-							value="${total+item.product.price*item.quantity }"></c:set>
+			<c:choose>
+				<c:when test="${sessionScope.cart!=null }">
+					<table border="2">
 						<tr>
-							<td>${item.product.fullName }</td>
-							<td>${item.product.companyName }</td>
-							<td>${item.product.price }</td>
-							<td>${item.quantity }</td>
-							<td>${item.product.price*item.quantity }</td>
-							<td><a href="${appurl }/removefromcart/${item.product.id }"
-								class="btn btn-danger">Remove</a></td>
+							<th>name</th>
+							<th>company</th>
+							<th>price</th>
+							<th>quantity</th>
+							<th>total fee</th>
+							<th>action</th>
 						</tr>
-					</c:forEach>
-					<tr>
-						<td colspan="4">total price</td>
-						<td>${total }</td>
-						<td></td>
-					</tr>
-				</table>
-				<div align="center">
-					<a href="" class="btn btn-success">complete shopping</a> <a
-						href="${pageContext.request.contextPath }" class="btn btn-info">continue to
-						shopping</a>
-				</div>
-			</c:if>
-			<c:if test="${message!=null }">
-				<div align="center">
-					<h2
-						style="color: orange; border-radius: 2px; border: solid black 1px">${message }</h2>
-					<a href="${pageContext.request.contextPath }" class="btn btn-info">continue to
-						shopping</a>
-				</div>
-			</c:if>
+						<c:set var="total" value="0"></c:set>
+						<c:forEach var="item" items="${ sessionScope.cart}">
+							<c:set var="total"
+								value="${total+item.product.price*item.quantity }"></c:set>
+							<tr>
+								<td>${item.product.fullName }</td>
+								<td>${item.product.companyName }</td>
+								<td>${item.product.price }</td>
+								<td>${item.quantity }</td>
+								<td>${item.product.price*item.quantity }</td>
+								<td><a href="${appurl }/removefromcart/${item.product.id }"
+									class="btn btn-danger">Remove</a></td>
+							</tr>
+						</c:forEach>
+						<tr>
+							<td colspan="4">total price</td>
+							<td>${total }</td>
+							<td></td>
+						</tr>
+					</table>
+					<div align="center">
+						<a href="${appurl }/store/completesale" class="btn btn-success">complete shopping</a> <a
+							href="${appurl }" class="btn btn-info">continue
+							to shopping</a>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div align="center">
+						<h2
+							style="color: orange; border-radius: 2px; border: solid black 1px">Your
+							cart is empty!</h2>
+						<a href="${appurl}" class="btn btn-info">continue
+							to shopping</a>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</center>
 </body>
