@@ -45,7 +45,7 @@
 							class="glyphicon glyphicon-user">Dear, <sec:authentication
 									property="name" />
 						</span></a></li>
-					<li><a href="${logoutUrl }" onclick="logoutPerform();"><span
+					<li><a href="${logoutUrl }"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
@@ -83,8 +83,8 @@
 						</div>
 
 						<a href="showdetails/${product.id }">
-							<div align="center" class="details">
 								<center>
+								<div align="center" class="details">
 									<div align="center" class="content">
 										<h2>${product.fullName }</h2>
 										<table border="0">
@@ -106,8 +106,8 @@
 											</c:if>
 										</table>
 									</div>
-								</center>
-							</div>
+								</div>
+							</center>
 						</a>
 					</div>
 				</c:forEach>
