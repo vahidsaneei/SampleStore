@@ -31,6 +31,8 @@ public class UserDaoImpl implements UserDao {
 
 	public String addUser(User user) {
 		String result = "";
+		String pass = encoder.encode(user.getPassword());
+		user.setPassword(pass);
 
 		try {
 			session().save(user);

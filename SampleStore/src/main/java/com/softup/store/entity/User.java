@@ -58,11 +58,13 @@ public class User implements Serializable, UserDetails {
 
 	@Column(name = "phonenumber", nullable = true)
 	private String phoneNumber;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Comment> comments = new ArrayList<Comment>();
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Orders> orders = new ArrayList<Orders>();
 
@@ -157,8 +159,6 @@ public class User implements Serializable, UserDetails {
 	public void setGender(char gender) {
 		this.gender = gender;
 	}
-
-	
 
 	public List<Comment> getComments() {
 		return comments;
