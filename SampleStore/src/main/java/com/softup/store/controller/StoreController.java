@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -76,30 +75,39 @@ public class StoreController {
 		Integer i = checkItemExist(id, cart);
 		CartItem ci = cart.get(i);
 		cart.remove(ci);
-		session.setAttribute("cart", cart);
+
+		if (cart.size() == 0)
+			session.setAttribute("cart", null);
+		else
+			session.setAttribute("cart", cart);
+
 		return "addtocartlist";
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/addtocartlist/{id}", method = RequestMethod.GET)
-	public String addToCart(@PathVariable(value = "id", required = false) Long id, HttpSession session) {
+	@RequestMapping(value = { "addtocartlist/{id}", "addtocartlist" }, method = RequestMethod.GET)
+	public String addToCart(@PathVariable(value = "id", required = false) String id, HttpSession session) {
 
-		Product p = productService.findById(id);
-
-		if (session.getAttribute("cart") == null) {
-			List<CartItem> cart = new ArrayList<CartItem>();
-			cart.add(new CartItem(p, 1));
-			session.setAttribute("cart", cart);
-		} else {
-			List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-			Integer i = checkItemExist(id, cart);
-			if (i == -1)
+		if (id != null) {
+			Long l = Long.parseLong(id);
+			Product p = productService.findById(l);
+			if (session.getAttribute("cart") == null) {
+				List<CartItem> cart = new ArrayList<CartItem>();
 				cart.add(new CartItem(p, 1));
-			else {
-				Integer q = cart.get(i).getQuantity() + 1;
-				cart.get(i).setQuantity(q);
+				session.setAttribute("cart", cart);
+			} else {
+				List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+				Integer i = checkItemExist(l, cart);
+				if (i == -1)
+					cart.add(new CartItem(p, 1));
+				else {
+					Integer q = cart.get(i).getQuantity() + 1;
+					cart.get(i).setQuantity(q);
+				}
+				session.setAttribute("cart", cart);
 			}
-			session.setAttribute("cart", cart);
+		} else if (id == null && session.getAttribute("cart") == null) {
+			session.setAttribute("cart", null);
 		}
 
 		return "addtocartlist";
@@ -115,30 +123,37 @@ public class StoreController {
 		return -1;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/store/completesale", method = RequestMethod.GET)
-	public ModelAndView loadOrder(@PathParam(value = "p") String p) {
+	public ModelAndView loadOrder(HttpSession session) {
 
 		ModelAndView model = new ModelAndView("orderbyuser");
-		List<Product> products = retriveProduct(p);
-		model.addObject("products", products);
+		List<CartItem> products = (List<CartItem>) session.getAttribute("cart");
+		model.addObject("items", products);
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
 		model.addObject("userinfo", user);
 		return model;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/store/addorder", method = RequestMethod.GET)
-	public ModelAndView addOrder(@PathParam(value = "p") String p) {
+	public ModelAndView addOrder(HttpSession session) {
 
 		ModelAndView model = new ModelAndView("successorder");
 
 		// create list of products that we have to add in orders
-		List<Product> products = retriveProduct(p);
+		List<CartItem> items = (List<CartItem>) session.getAttribute("cart");
 
 		// find user by username to set orders userinfo
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
-
+		List<Product> products=new ArrayList<Product>();
+		
+		for (CartItem cartItem : items) {
+			products.add(cartItem.getProduct());
+		}
+		
 		// new order generated and setter methods invoke
 		Orders order = new Orders(products, user);
 		Date d = new Date();
