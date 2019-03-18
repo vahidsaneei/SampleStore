@@ -75,12 +75,12 @@
 				<c:set var="total" value="0"></c:set>
 				<c:forEach var="item" items="${items }">
 					<c:set var="total"
-						value="${total+item.product.price*item.quantity }"></c:set>
+						value="${total+item.totalprice }"></c:set>
 					<tr>
 						<td>${item.product.fullName }</td>
 						<td>${item.product.price }</td>
 						<td>${item.quantity }</td>
-						<td>${item.product.price * item.quantity }</td>
+						<td>${item.totalprice }</td>
 					</tr>
 				</c:forEach>
 				<tr>
