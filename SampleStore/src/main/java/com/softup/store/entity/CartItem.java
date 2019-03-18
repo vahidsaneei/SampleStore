@@ -1,6 +1,7 @@
 package com.softup.store.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,14 +31,17 @@ public class CartItem implements Serializable {
 	@Column(name = "quantity", nullable = false, columnDefinition = "int(11) default 1")
 	private Integer quantity;
 
+	@Column(name = "totalprice", nullable = false)
+	private BigDecimal totalprice;
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "orderid", nullable = false)
 	private Orders order;
 
 	public CartItem(Product product, Integer quantity) {
-		super();
 		this.product = product;
 		this.quantity = quantity;
+		setTotalprice();
 	}
 
 	public CartItem() {
@@ -65,6 +69,22 @@ public class CartItem implements Serializable {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public BigDecimal getTotalprice() {
+		return totalprice;
+	}
+
+	public void setTotalprice() {
+		this.totalprice = getProduct().getPrice().multiply(new BigDecimal(getQuantity()));
+	}
+
+	public Orders getOrder() {
+		return order;
+	}
+
+	public void setOrder(Orders order) {
+		this.order = order;
 	}
 
 }
