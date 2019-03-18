@@ -10,7 +10,7 @@ public interface UserService {
 
 	User findByUsername(String username);
 
-	List<User> getAllUsers();
+	List<User> getAllUsers(String exceptUsername);
 
 	User findById(long id);
 

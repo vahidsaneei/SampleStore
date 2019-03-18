@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public List<User> getAllUsers() {
-		return userDao.getAllUsers();
+	public List<User> getAllUsers(String username) {
+		return userDao.getAllUsers(username);
 	}
 
 	@Transactional

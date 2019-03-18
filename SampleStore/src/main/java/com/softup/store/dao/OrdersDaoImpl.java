@@ -86,8 +86,9 @@ public class OrdersDaoImpl implements OrdersDao {
 					result = "error " + e.getCause().getMessage();
 			else {
 				result = "error " + e.getMessage();
-				System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + result);
 			}
+
+			System.err.println(result);
 		} finally {
 			session().clear();
 		}
@@ -130,6 +131,11 @@ public class OrdersDaoImpl implements OrdersDao {
 			session().clear();
 		}
 		return result;
+	}
+
+	public List<Orders> getAllOrders() {
+		List<Orders> orders = session().createQuery("From Orders", Orders.class).list();
+		return orders;
 	}
 
 }

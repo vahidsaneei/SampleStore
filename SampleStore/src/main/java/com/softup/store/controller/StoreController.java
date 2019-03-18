@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,14 +138,13 @@ public class StoreController {
 		} else if (id == null && session.getAttribute("cart") == null) {
 			session.setAttribute("cart", null);
 		}
-
+		session.setAttribute("error", null);
 		return "addtocartlist";
 	}
 
 	protected Integer checkItemExist(Long id, List<CartItem> cart) {
 
 		for (int i = 0; i < cart.size(); i++) {
-			System.err.println("----------------------->" + cart.get(i).getProduct().getId());
 			if (cart.get(i).getProduct().getId() == id)
 				return i;
 		}
@@ -152,11 +152,18 @@ public class StoreController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/store/completesale", method = RequestMethod.GET)
-	public ModelAndView loadOrder(HttpSession session) {
+	@RequestMapping(value = "/store/completesale", method = RequestMethod.POST)
+	public ModelAndView loadOrder(HttpSession session, HttpServletRequest request) {
+
+		String[] quantities = request.getParameterValues("quantity");
 
 		ModelAndView model = new ModelAndView("orderbyuser");
 		List<CartItem> products = (List<CartItem>) session.getAttribute("cart");
+
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setQuantity(Integer.parseInt(quantities[i]));
+		}
+
 		model.addObject("items", products);
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
@@ -168,23 +175,33 @@ public class StoreController {
 	@RequestMapping(value = "/store/addorder", method = RequestMethod.GET)
 	public ModelAndView addOrder(HttpSession session) {
 
-		ModelAndView model = new ModelAndView("successorder");
+		ModelAndView model = new ModelAndView();
 
 		// create list of products that we have to add in orders
+		System.err.println("item get to retrieving---------------");
 		List<CartItem> items = (List<CartItem>) session.getAttribute("cart");
+		for (CartItem cartItem : items) {
+			System.err.println(cartItem.getProduct());
+		}
 
 		// find user by username to set orders userinfo
+		System.err.println("user information get to retriving---------------");
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
+		System.err.println(user);
 
 		// new order generated and setter methods invoke
+		System.err.println("new order generated-------------------");
 		Orders order = new Orders(items, user);
 		Date d = new Date();
 		Date delivery = StoreUtils.deliveryDate(d, 3);
 		order.setOrderDate(d);
 		order.setDeliveryDate(delivery);
+		order.setUser(user);
+		order.setItems(items);
 		String addOrders = orderService.addOrders(order);
-
+		System.err.println("new order add status " + addOrders + "-------------");
+		System.err.println(order);
 		// change product quantity after adding new order
 		for (int i = 0; i < items.size(); i++) {
 			Integer qSale = items.get(i).getQuantity() * (-1);
@@ -192,11 +209,13 @@ public class StoreController {
 		}
 
 		if (!addOrders.toLowerCase().contains("error")) {
+			model.setViewName("successorder");
 			model.addObject("order", order);
 			model.addObject("message", addOrders);
 			session.setAttribute("cart", null);
 		} else {
-			model.addObject("error", addOrders);
+			session.setAttribute("error", addOrders);
+			model.setViewName("redirect:/addtocartlist");
 		}
 		return model;
 	}

@@ -61,8 +61,9 @@ public class UserDaoImpl implements UserDao {
 		return user;
 	}
 
-	public List<User> getAllUsers() {
-		List<User> users = session().createQuery("From User", User.class).list();
+	public List<User> getAllUsers(String username) {
+		List<User> users = session().createQuery("From User where username !=?", User.class).setParameter(0, username)
+				.list();
 		return users;
 	}
 

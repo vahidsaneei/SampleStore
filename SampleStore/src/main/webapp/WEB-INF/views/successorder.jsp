@@ -62,9 +62,10 @@
 			</ul>
 		</div>
 	</center>
-	<center>
-		<div class="container">
+	<div>
+		<center>
 			<h2>Your order</h2>
+			<br>
 			<c:choose>
 				<c:when test="${not empty error}">
 					<div class="text bg-danger">
@@ -75,11 +76,12 @@
 					<div class="text bg-info">
 						<strong>${message}</strong><br> Delivery date is : <strong>${order.deliveryDate }</strong>
 					</div>
+					<br>
 				</c:otherwise>
 			</c:choose>
 			<a href="${pageContext.request.contextPath }" class="btn btn-info">Back
 				to Store</a>
-		</div>
-	</center>
+		</center>
+	</div>
 </body>
 </html>

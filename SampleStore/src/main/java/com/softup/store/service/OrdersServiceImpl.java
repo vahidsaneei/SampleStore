@@ -70,4 +70,9 @@ public class OrdersServiceImpl implements OrderService {
 		return ordersDao.removeOrders(id);
 	}
 
+	@Transactional
+	public List<Orders> getAllOrders() {
+		return ordersDao.getAllOrders();
+	}
+
 }

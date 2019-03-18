@@ -60,16 +60,22 @@
 		</div>
 	</center>
 	<center>
+		
 		<h2>Completing order</h2>
 		<div>
-			<table border="1">
-				<tr>
-					<th>product name</th>
-					<th>price</th>
-					<th>quantity</th>
-					<th>total price</th>
-				</tr>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>product name</th>
+						<th>price</th>
+						<th>quantity</th>
+						<th>total price</th>
+					</tr>
+				</thead>
+				<c:set var="total" value="0"></c:set>
 				<c:forEach var="item" items="${items }">
+					<c:set var="total"
+						value="${total+item.product.price*item.quantity }"></c:set>
 					<tr>
 						<td>${item.product.fullName }</td>
 						<td>${item.product.price }</td>
@@ -77,6 +83,16 @@
 						<td>${item.product.price * item.quantity }</td>
 					</tr>
 				</c:forEach>
+				<tr>
+					<td colspan="2">Total</td>
+					<td colspan="2">${total }</td>
+				</tr>
+				<tr>
+					<td colspan="2">Action</td>
+					<td colspan="2"><a href="${appurl }/addtocartlist"
+						class="btn btn-success">Edit items</a><a type="button"
+						class="btn btn-info" href="${appurl }/store/addorder">Pay Cash</a></td>
+				</tr>
 			</table>
 		</div>
 		<div>
@@ -87,10 +103,6 @@
 			<h4>Address ${userinfo.address }</h4>
 			<br />
 			<h4>PhoneNumber ${userinfo.phoneNumber }</h4>
-		</div>
-		<div>
-			<a type="button" class="btn btn-info"
-				href="${appurl }/store/addorder">Pay Cash</a>
 		</div>
 	</center>
 </body>

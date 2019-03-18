@@ -11,6 +11,8 @@ import com.softup.store.entity.Product;
 
 public interface OrdersDao {
 
+	List<Orders> getAllOrders();
+	
 	String addOrders(Orders orders);
 
 	String updateOrders(Orders orders);

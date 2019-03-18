@@ -9,6 +9,8 @@ import com.softup.store.entity.Product;
 
 public interface OrderService {
 
+	List<Orders> getAllOrders();
+	
 	String addOrders(Orders orders);
 
 	String updateOrders(Orders orders);

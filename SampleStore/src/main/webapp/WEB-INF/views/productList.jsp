@@ -69,43 +69,45 @@
 					product</a>
 			</center>
 		</div>
-		<div class="container">
-			<center>
-				<table class="table table-condensed" style="width: 100%" border="1">
-					<thead>
-						<tr>
-							<th>Prd Name</th>
-							<th>Company</th>
-							<th>Create date</th>
-							<th>Expire date</th>
-							<th>Category</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Description</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<c:forEach var="product" items="${products }">
-						<tr>
-							<td>${product.fullName }</td>
-							<td>${product.companyName }</td>
-							<td>${product.createdDate }</td>
-							<td>${product.expiryDate }</td>
-							<td>${product.category }</td>
-							<td>${product.price }</td>
-							<td>${product.quantity }</td>
-							<td>${product.description }</td>
-							<td colspan="2"><div class="btn-group-vertical">
-									<a href="${url }/products/remove/${product.id }"
-										class="btn btn-danger">Delete</a> <a
-										href="${url }/products/edit/${product.id }"
-										class="btn btn-warning">Edit</a>
-								</div></td>
-						</tr>
-					</c:forEach>
-				</table>
-			</center>
-		</div>
+		<center>
+			<div>
+				<center>
+					<table class="table table-hover" style="width: 100%" border="1">
+						<thead>
+							<tr>
+								<th>Prd Name</th>
+								<th>Company</th>
+								<th>Create date</th>
+								<th>Expire date</th>
+								<th>Category</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Description</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<c:forEach var="product" items="${products }">
+							<tr>
+								<td>${product.fullName }</td>
+								<td>${product.companyName }</td>
+								<td>${product.createdDate }</td>
+								<td>${product.expiryDate }</td>
+								<td>${product.category }</td>
+								<td>${product.price }</td>
+								<td>${product.quantity }</td>
+								<td>${product.description }</td>
+								<td colspan="2"><div class="btn-group-vertical">
+										<a href="${url }/products/remove/${product.id }"
+											class="btn btn-danger">Delete</a> <a
+											href="${url }/products/edit/${product.id }"
+											class="btn btn-success">Edit</a>
+									</div></td>
+							</tr>
+						</c:forEach>
+					</table>
+				</center>
+			</div>
+		</center>
 	</center>
 </body>
 </html>

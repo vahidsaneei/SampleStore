@@ -18,15 +18,15 @@
 		<intercept-url access="permitAll" pattern="/" />
 		<intercept-url access="permitAll" pattern="/sellers/**" />
 		<intercept-url pattern="/products/**"
-			access="hasRole('ROLE_ADMIN')" />
+			access="hasAnyRole('ROLE_SYS_ADMIN','ROLE_ADMIN')" />
 		<intercept-url pattern="/store/**"
 			access="isAuthenticated()" />
 		<intercept-url pattern="/users/**"
-			access="hasAnyRole('ROLE_ADMIN','ROLE_DBA')" />
+			access="hasAnyRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/orders/**"
-			access="hasAnyRole('ROLE_ADMIN','ROLE_DBA','ROLE_SALE_MANAGER')" />
+			access="hasAnyRole('ROLE_SYS_ADMIN','ROLE_ADMIN','ROLE_SALE_MANAGER')" />
 		<intercept-url pattern="/stores/**"
-			access="hasAnyRole('ROLE_ADMIN','ROLE_DBA','ROLE_SALE_MANAGER')" />
+			access="hasAnyRole('ROLE_SYS_ADMIN','ROLE_ADMIN','ROLE_DBA','ROLE_SALE_MANAGER')" />
 		<!-- access denied page -->
 		<access-denied-handler error-page="/403" />
 

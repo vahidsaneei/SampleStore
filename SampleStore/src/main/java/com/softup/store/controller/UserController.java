@@ -1,5 +1,7 @@
 package com.softup.store.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,15 @@ public class UserController {
 		User user = userService.findByUsername(name);
 		model.addObject("user", user);
 		return model;
+	}
 
+	@RequestMapping(value = "users", method = RequestMethod.GET)
+	public ModelAndView getAllUsers() {
+		ModelAndView model = new ModelAndView("userlist");
+
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		List<User> users = userService.getAllUsers(username);
+		model.addObject("userList", users);
+		return model;
 	}
 }

@@ -64,50 +64,60 @@
 		</div>
 		<h1>list of sales</h1>
 		<div align="center">
+			<c:if test="${not empty error}">
+				<div class="text bg-danger text-danger">
+					<strong>${error}</strong>
+				</div>
+			</c:if>
 			<c:choose>
 				<c:when test="${sessionScope.cart!=null }">
-					<table border="2">
-						<tr>
-							<th>name</th>
-							<th>company</th>
-							<th>price</th>
-							<th>quantity</th>
-							<th>total fee</th>
-							<th>action</th>
-						</tr>
-						<c:set var="total" value="0"></c:set>
-						<c:forEach var="item" items="${ sessionScope.cart}">
-							<c:set var="total"
-								value="${total+item.product.price*item.quantity }"></c:set>
+					<form action="${appurl }/store/completesale" method="post">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>name</th>
+									<th>company</th>
+									<th>price</th>
+									<th>quantity</th>
+									<th>total fee</th>
+									<th>action</th>
+								</tr>
+							</thead>
+							<c:set var="total" value="0"></c:set>
+							<c:forEach var="item" items="${ sessionScope.cart}">
+								<c:set var="total"
+									value="${total+item.product.price*item.quantity }"></c:set>
+								<tr>
+									<td>${item.product.fullName }</td>
+									<td>${item.product.companyName }</td>
+									<td>${item.product.price }</td>
+									<td><input type="number" name="quantity" min="1" max="10"
+										step="1" value="${item.quantity }"></td>
+									<td>${item.product.price*item.quantity }</td>
+									<td><a
+										href="${appurl }/removefromcart/${item.product.id }"
+										class="btn btn-danger">Remove</a></td>
+								</tr>
+							</c:forEach>
 							<tr>
-								<td>${item.product.fullName }</td>
-								<td>${item.product.companyName }</td>
-								<td>${item.product.price }</td>
-								<td>${item.quantity }</td>
-								<td>${item.product.price*item.quantity }</td>
-								<td><a href="${appurl }/removefromcart/${item.product.id }"
-									class="btn btn-danger">Remove</a></td>
+								<td colspan="4">total price</td>
+								<td>${total }</td>
+								<td></td>
 							</tr>
-						</c:forEach>
-						<tr>
-							<td colspan="4">total price</td>
-							<td>${total }</td>
-							<td></td>
-						</tr>
-					</table>
-					<div align="center">
-						<a href="${appurl }/store/completesale" class="btn btn-success">complete shopping</a> <a
-							href="${appurl }" class="btn btn-info">continue
-							to shopping</a>
-					</div>
+						</table>
+						<div align="center">
+							<input type="submit" value="Complete Shopping"
+								class="btn btn-success" /> <a href="${appurl }"
+								class="btn btn-info">continue to shopping</a>
+						</div>
+					</form>
 				</c:when>
 				<c:otherwise>
 					<div align="center">
 						<h2
 							style="color: orange; border-radius: 2px; border: solid black 1px">Your
 							cart is empty!</h2>
-						<a href="${appurl}" class="btn btn-info">continue
-							to shopping</a>
+						<a href="${appurl}" class="btn btn-info">continue to shopping</a>
 					</div>
 				</c:otherwise>
 			</c:choose>
