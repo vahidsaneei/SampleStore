@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Products pages</title>
+<title>Users</title>
 <c:url value="/resources/css/" var="cssUrl" />
 <c:url value="/resources/images/" var="imageUrl" />
 <c:url value="/resources/js" var="scriptUrl" />
@@ -24,6 +24,7 @@
 <title>User management</title>
 </head>
 <body>
+	<c:set var="appurl">${pageContext.request.contextPath }</c:set>
 	<c:url value="/logout" var="logoutUrl" />
 
 	<!-- csrf for log out-->
@@ -41,30 +42,31 @@
 						class="glyphicon glyphicon-log-out">Logout</span></a></li>
 			</sec:authorize>
 			<sec:authorize access="!isAuthenticated()">
-				<li><a href="${pageContext.request.contextPath }/login"><span
+				<li><a href="${appurl }/login"><span
 						class="glyphicon glyphicon-user">Login</span></a></li>
 			</sec:authorize>
-			<li><a id="cartlink" href="addtocartlist"><span
+			<li><a id="cartlink" href="${appurl }/addtocartlist"><span
 					class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<li><a href="products"><span
+				<li><a href="${appurl }/products"><span
 						class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-				<li><a href="users"><span
+				<li><a href="${appurl }/users"><span
 						class="glyphicon glyphicon-list">Users Management</span></a></li>
-				<li><a href="orders"><span
+				<li><a href="${appurl }/orders"><span
 						class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-				<li><a href="stores"><span
+				<li><a href="${appurl }/stores"><span
 						class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 			</sec:authorize>
-			<li><a href="search"><span
+			<li><a href="${appurl }/search"><span
 					class="glyphicon glyphicon-search">Search</span></a></li>
-			<li><a href="${pageContext.request.contextPath }"><span
+			<li><a href="${appurl }"><span
 					class="glyphicon glyphicon-home">Home</span></a></li>
 		</ul>
 	</div>
 	<div class="container">
 		<center>
-			<a class="btn btn-info" href="users/newuser">Add new User</a>
+			<a class="btn btn-success" href="${appurl }/users/newuser">Add
+				new User</a>
 		</center>
 	</div>
 	<div>
@@ -80,6 +82,7 @@
 						<th>Cred non Expired</th>
 						<th>Address</th>
 						<th>PhoneNumber</th>
+						<th>Role</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -93,9 +96,11 @@
 						<td>${user.credentialsNonExpired }</td>
 						<td>${user.address }</td>
 						<td>${user.phoneNumber }</td>
+						<td>${user.userRoles.iterator().next().role }</td>
 						<td colspan="2"><div class="btn-group-vertical">
-								<a href="#" class="btn btn-danger">Delete</a> <a href="#"
-									class="btn btn-success">Edit</a>
+								<a href="#" class="btn btn-danger">Delete</a> <a
+									href="${appurl }/users/edituser/${user.id}"
+									class="btn btn-primary">Edit</a>
 							</div></td>
 					</tr>
 				</c:forEach>
