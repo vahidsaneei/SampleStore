@@ -85,15 +85,15 @@
 							</thead>
 							<c:set var="total" value="0"></c:set>
 							<c:forEach var="item" items="${ sessionScope.cart}">
-								<c:set var="total"
-									value="${total+item.product.price*item.quantity }"></c:set>
+								<c:set var="total" value="${total+item.totalprice }"></c:set>
 								<tr>
 									<td>${item.product.fullName }</td>
 									<td>${item.product.companyName }</td>
 									<td>${item.product.price }</td>
-									<td><input type="number" name="quantity" min="1" max="10"
-										step="1" value="${item.quantity }"></td>
-									<td>${item.product.price*item.quantity }</td>
+									<td><input type="number" id="quantity${item.product.id }"
+										name="quantity" min="1" max="10" step="1"
+										value="${item.quantity }"></td>
+									<td>${item.totalprice }</td>
 									<td><a
 										href="${appurl }/removefromcart/${item.product.id }"
 										class="btn btn-danger">Remove</a></td>
