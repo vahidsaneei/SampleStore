@@ -6,6 +6,8 @@ import com.softup.store.entity.User;
 
 public interface UserService {
 
+	String updateUser(User user);
+
 	String addUser(User user);
 
 	User findByUsername(String username);

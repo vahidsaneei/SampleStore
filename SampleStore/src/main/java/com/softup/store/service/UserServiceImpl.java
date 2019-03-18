@@ -80,4 +80,9 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Transactional
+	public String updateUser(User user) {
+		return userDao.updateUser(user);
+	}
+
 }
