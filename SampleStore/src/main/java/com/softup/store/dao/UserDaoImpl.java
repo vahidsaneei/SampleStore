@@ -107,4 +107,19 @@ public class UserDaoImpl implements UserDao {
 
 	}
 
+	public String updateUser(User user) {
+
+		String result = "";
+
+		try {
+			session().update(user);
+			session().flush();
+			result = "success";
+		} catch (Exception e) {
+			result = "error :" + e.getCause().getMessage();
+		}
+
+		return result;
+	}
+
 }

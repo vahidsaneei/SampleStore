@@ -6,6 +6,8 @@ import com.softup.store.entity.User;
 
 public interface UserDao {
 
+	String updateUser(User user);
+	
 	String addUser(User user);
 
 	User findByUsername(String username);
