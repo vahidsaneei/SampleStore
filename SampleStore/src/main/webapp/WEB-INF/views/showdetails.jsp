@@ -53,9 +53,9 @@
 					<li><a href="${appurl }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				<li><a href="searchpage"><span
+				<li><a href="${appurl }/searchpage"><span
 						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${pageContext.request.contextPath }"><span
+				<li><a href="${appurl }"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
 		</div>
@@ -129,18 +129,18 @@
 					<td colspan="5">
 						<div class="btn-group-vertical">
 							<a id="likelink${product.id}" class="btn btn-default btn-lg"
-								href="javascript:checkLoggedUser(${product.id })"> <span
-								class="glyphicon glyphicon-heart-empty">Like this</span>
+								href="javascript:setlike(${product.id })"> <span
+								class="glyphicon glyphicon-heart-empty"></span>
 							</a>
 							<c:if test="${product.quantity>0 }">
 								<a id="cartlink${product.id}" class="btn btn-success btn-lg"
 									onclick="addToCart(${product.id },1)"
 									href="${appurl }/addtocartlist/${product.id }"><span
-									class="glyphicon glyphicon-shopping-cart">Add to Cart</span></a>
+									class="glyphicon glyphicon-shopping-cart"></span></a>
 							</c:if>
 
 							<a class="btn btn-info btn-lg" href="${appurl }"><span
-								class="glyphicon glyphicon-th-list">Back to Store</span></a>
+								class="glyphicon glyphicon-th-list"></span></a>
 						</div>
 					</td>
 				</tr>
