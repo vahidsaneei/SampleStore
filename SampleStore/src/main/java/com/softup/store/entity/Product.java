@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -60,6 +63,8 @@ public class Product implements Serializable {
 	@Column(name = "description", nullable = true)
 	private String description;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	private CartItem cardItem;
 
 	public Product(String fullName, String companyName, Date expiryDate, Integer quantity, BigDecimal price,
 			String description) {
@@ -287,6 +292,14 @@ public class Product implements Serializable {
 		} else if (!seller.equals(other.seller))
 			return false;
 		return true;
+	}
+
+	public CartItem getCardItem() {
+		return cardItem;
+	}
+
+	public void setCardItem(CartItem cardItem) {
+		this.cardItem = cardItem;
 	}
 
 }
