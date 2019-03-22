@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -48,16 +49,17 @@ public class UserDaoImpl implements UserDao {
 		return result;
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public User findByUsername(String username) {
 
-		List<User> users = session().createQuery("from User where username=?", User.class).setParameter(0, username)
+		List<User> users = session().createCriteria(User.class, "From User").add(Restrictions.eq("username", username))
 				.list();
 		User user = null;
 
 		if (users.size() > 0) {
 			user = users.get(0);
 		}
-
+		session().clear();
 		return user;
 	}
 
@@ -68,18 +70,19 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public User findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return session().get(User.class, id);
 	}
 
 	public List<User> findByAddress(String address) {
-		// TODO Auto-generated method stub
-		return null;
+		List<User> users = session().createQuery("From User where address =?", User.class).setParameter(0, address)
+				.list();
+		return users;
 	}
 
 	public List<User> findByPhoneNumber(String number) {
-		// TODO Auto-generated method stub
-		return null;
+		List<User> users = session().createQuery("From User where phoneNumber =?", User.class).setParameter(0, number)
+				.list();
+		return users;
 	}
 
 	public List<User> getDisabledUser() {
