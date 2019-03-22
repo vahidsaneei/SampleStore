@@ -21,10 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.softup.store.entity.CartItem;
+import com.softup.store.entity.Likes;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.entity.UserRole;
+import com.softup.store.interfaces.LikeService;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
@@ -40,6 +42,8 @@ public class StoreController {
 	UserService userService;
 	@Autowired
 	OrderService orderService;
+	@Autowired
+	LikeService likeService;
 
 	@RequestMapping(value = { "/", "index", "home" }, method = RequestMethod.GET)
 	public ModelAndView gethome() {
@@ -76,15 +80,20 @@ public class StoreController {
 	public ModelAndView saveNewUser(@ModelAttribute User user) {
 
 		ModelAndView model = new ModelAndView();
+
+		// set user enabled and account expiry
 		user.setEnabled(true);
 		user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setCredentialsNonExpired(true);
+
+		// create user role for customer and ordinary users
 		UserRole role = new UserRole(user, "ROLE_USER");
 		Set<UserRole> roles = new HashSet<UserRole>();
 		roles.add(role);
+		// set user role to USER
 		user.setUserRoles(roles);
-
+		// invoke service to add user in database
 		String result = userService.addUser(user);
 
 		if (!result.toLowerCase().startsWith("error")) {
@@ -138,7 +147,6 @@ public class StoreController {
 		} else if (id == null && session.getAttribute("cart") == null) {
 			session.setAttribute("cart", null);
 		}
-		session.setAttribute("error", null);
 		return "addtocartlist";
 	}
 
@@ -151,17 +159,42 @@ public class StoreController {
 		return -1;
 	}
 
+	@RequestMapping(value = "/store/setlike/{id}", method = RequestMethod.GET)
+	public void setLike(@PathVariable("id") Long id) {
+		Product p = productService.findById(id);
+		User user = findUser();
+
+		Likes like = new Likes(user, p);
+		String result = likeService.setLike(like);
+
+		System.err.println("like operation result = " + result);
+
+	}
+
+	@RequestMapping(value = "/store/unlike/{id}", method = RequestMethod.GET)
+	public void unLike(@PathVariable("id") Long id) {
+		Product p = productService.findById(id);
+		User user = findUser();
+		Likes like = new Likes(user, p);
+		String result = likeService.unLike(like);
+
+		System.err.println("like operation result = " + result);
+
+	}
+
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/store/completesale", method = RequestMethod.POST)
-	public ModelAndView loadOrder(HttpSession session, HttpServletRequest request) {
+	@RequestMapping(value = "/store/completesale/{id}/{val}", method = RequestMethod.POST)
+	public ModelAndView loadOrder(@PathVariable("id") Long id, @PathVariable("val") Integer value, HttpSession session,
+			HttpServletRequest request) {
 
-		String[] quantities = request.getParameterValues("quantity");
-
-		ModelAndView model = new ModelAndView("orderbyuser");
+		ModelAndView model = new ModelAndView("addtocartlist");
 		List<CartItem> products = (List<CartItem>) session.getAttribute("cart");
 
 		for (int i = 0; i < products.size(); i++) {
-			products.get(i).setQuantity(Integer.parseInt(quantities[i]));
+			if (products.get(i).getProduct().getId() == id) {
+				products.get(i).setQuantity(value);
+				System.err.println("product quantity set.");
+			}
 		}
 
 		model.addObject("items", products);
@@ -178,37 +211,37 @@ public class StoreController {
 		ModelAndView model = new ModelAndView();
 
 		// create list of products that we have to add in orders
-		System.err.println("item get to retrieving---------------");
 		List<CartItem> items = (List<CartItem>) session.getAttribute("cart");
-		for (CartItem cartItem : items) {
-			System.err.println(cartItem.getProduct());
-		}
+		Set<CartItem> itemsSet = new HashSet<CartItem>();
 
 		// find user by username to set orders userinfo
-		System.err.println("user information get to retriving---------------");
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(username);
-		System.err.println(user);
 
 		// new order generated and setter methods invoke
-		System.err.println("new order generated-------------------");
-		Orders order = new Orders(items, user);
+		Orders order = new Orders(itemsSet, user);
 		Date d = new Date();
 		Date delivery = StoreUtils.deliveryDate(d, 3);
 		order.setOrderDate(d);
 		order.setDeliveryDate(delivery);
 		order.setUser(user);
-		order.setItems(items);
-		String addOrders = orderService.addOrders(order);
-		System.err.println("new order add status " + addOrders + "-------------");
-		System.err.println(order);
-		// change product quantity after adding new order
-		for (int i = 0; i < items.size(); i++) {
-			Integer qSale = items.get(i).getQuantity() * (-1);
-			productService.rechargeProduct(items.get(i).getProduct(), qSale);
+		order.setItems(itemsSet);
+
+		for (CartItem cartItem : items) {
+			cartItem.setOrder(order);
+			itemsSet.add(cartItem);
 		}
 
+		String addOrders = orderService.addOrders(order);
+		System.err.println("new order add status " + addOrders + "-------------");
+		// change product quantity after adding new order
+
 		if (!addOrders.toLowerCase().contains("error")) {
+
+			for (int i = 0; i < items.size(); i++) {
+				Integer qSale = items.get(i).getQuantity() * (-1);
+				productService.rechargeProduct(items.get(i).getProduct(), qSale);
+			}
 			model.setViewName("successorder");
 			model.addObject("order", order);
 			model.addObject("message", addOrders);
@@ -220,19 +253,10 @@ public class StoreController {
 		return model;
 	}
 
-	public List<Product> retriveProduct(String productIds) {
-
-		List<Product> products = new ArrayList<Product>();
-
-		String[] prods = productIds.split(",");
-
-		for (String string : prods) {
-			String[] vars = string.split("-");
-			Long l = Long.parseLong(vars[0]);
-			Product p = productService.findById(l);
-			p.setQuantity(Integer.parseInt(vars[1]));
-			products.add(p);
-		}
-		return products;
+	private User findUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = userService.findByUsername(username);
+		return user;
 	}
+
 }
