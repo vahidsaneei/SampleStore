@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 
 public interface ProductDao {
 	List<Product> getAllProducts();
@@ -17,6 +18,8 @@ public interface ProductDao {
 	String updateProduct(Product product);
 
 	List<Product> findByName(String name);
+	
+	void setLike(Long id,User user);
 
 	List<Product> getNewestProducts();
 

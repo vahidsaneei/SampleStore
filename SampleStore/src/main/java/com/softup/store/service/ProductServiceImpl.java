@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.ProductDao;
 import com.softup.store.interfaces.ProductService;
 
@@ -89,6 +90,10 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	public String updateProduct(Product product) {
 		return productDao.updateProduct(product);
+	}
+
+	public void setLike(Long id,User user) {
+		productDao.setLike(id,user);
 	}
 
 }

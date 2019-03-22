@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.ProductDao;
 import com.softup.store.utils.StoreUtils;
 
@@ -154,6 +155,19 @@ public class ProductDaoImpl implements ProductDao {
 		}
 
 		return result;
+	}
+
+	public void setLike(Long id,User user) {
+		Product p = session().get(Product.class, id);
+		Integer like = p.getLikeCount();
+
+		if (like == null) {
+			p.setLikeCount(1);
+		} else {
+			like += 1;
+			p.setLikeCount(like);
+			updateProduct(p);
+		}
 	}
 
 }
