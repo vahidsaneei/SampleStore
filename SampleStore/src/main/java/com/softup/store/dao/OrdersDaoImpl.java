@@ -40,31 +40,32 @@ public class OrdersDaoImpl implements OrdersDao {
 		return orders;
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings({ "deprecation" })
 	public List<Orders> canceledOrders() {
 		String sql = "SELECT * FROM ORDERS WHERE canceled=:canceled";
-		List<Orders> orders = session().createQuery(sql).setBoolean("canceled", Boolean.TRUE).list();
+		List<Orders> orders = session().createQuery(sql, Orders.class).setBoolean("canceled", Boolean.TRUE).list();
 
 		return orders;
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public List<Orders> completeOrders() {
 		String sql = "SELECT * FROM ORDERS WHERE success=:success";
-		List<Orders> orders = session().createQuery(sql).setBoolean("success", Boolean.TRUE).list();
+		List<Orders> orders = session().createQuery(sql, Orders.class).setBoolean("success", Boolean.TRUE).list();
 		return orders;
 	}
 
 	public String cancelOrder(Orders orders, String cause) {
 		orders.setCancelCause(cause);
 		orders.setCanceled(true);
-
 		return updateOrders(orders);
 
 	}
 
 	public List<Orders> findOrdersByProduct(Product product) {
-		return null;
+		String sql = "SELECT From CartItem where prd_id=:prdId";
+		List<Orders> orders = session().createQuery(sql, Orders.class).setParameter(0, product.getId()).list();
+		return orders;
 	}
 
 	public List<Product> saleInPeriod(Period period, Product product) {
@@ -75,20 +76,16 @@ public class OrdersDaoImpl implements OrdersDao {
 		String result = "";
 
 		try {
-			session().save(orders);
-			result = "success";
+			Long id = (Long) session().save(orders);
+			result = Long.toString(id);
 
 		} catch (Exception e) {
-			if (e.getCause() != null)
-				if (e.getCause().getMessage().toLowerCase().contains("duplicate"))
-					result = "error this  order already was exist";
-				else
-					result = "error " + e.getCause().getMessage();
-			else {
+			if (e.getMessage().toLowerCase().contains("duplicate"))
+				result = "error this  order already was exist";
+			else
 				result = "error " + e.getMessage();
-			}
-
 			System.err.println(result);
+
 		} finally {
 			session().clear();
 		}
