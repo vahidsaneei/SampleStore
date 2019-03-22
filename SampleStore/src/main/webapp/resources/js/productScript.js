@@ -1,3 +1,4 @@
+
 var appUrl = "http://localhost:8080/SampleStore";
 
 function sendData(data, targetUrl, method) {
@@ -84,86 +85,51 @@ function checkLoggedUser() {
 }
 function setlike(id) {
 
-	var v = checkLoggedUser();
-	console.log("from like setter " + v);
-	if (v === "1") {
-		var http;
-		var likelink = document.getElementById("likelink" + id);
-		if (window.XMLHttpRequest) {
-			http = new XMLHttpRequest();
-		} else {
-			http = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var url = appUrl + "/setlike/" + id;
-
-		http.open('POST', url, true);
-		http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
-		http.onreadystatechange = function() {
-			if (http.readyState == 4 && http.status == 200) {
-				var value = http.responseText;
-				likelink.href = "javascript:setUnlike(" + id + ")";
-				toggleLikeStyle(id, value);
-			}
-		}
-		http.send(id);
-	} else {
-		alert('please login at first!');
-		window.location = appUrl + "/login";
-	}
-}
-
-function setUnlike(id) {
 	var http;
 	var likelink = document.getElementById("likelink" + id);
-
 	if (window.XMLHttpRequest) {
 		http = new XMLHttpRequest();
 	} else {
 		http = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var url = appUrl + "/setunlike/" + id;
+	var url = appUrl + "/store/setlike/" + id;
 
-	http.open('POST', url, true);
+	http.open('GET', url, true);
 	http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
 	http.onreadystatechange = function() {
 		if (http.readyState == 4 && http.status == 200) {
-			var value = http.responseText;
-			likelink.href = "javascript:setlike(" + id + ")";
-			toggleLikeStyle(id, value);
+			likelink.href = "javascript:setUnlike(" + id + ")";
+			toggleLikeStyle(id);
 		}
 	}
 	http.send(id);
 }
-function completeSaling() {
-	var login = checkLoggedUser();
 
-	if (login == '1') {
-
+function setUnlike(id) {
+	var http;
+	var likelink = document.getElementById("likelink" + id);
+	if (window.XMLHttpRequest) {
+		http = new XMLHttpRequest();
 	} else {
-		window.location = appUrl + "/login";
+		http = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-}
-function addToCart(value, q) {
+	var url = appUrl + "/store/unlike/" + id;
 
-	var cartlink = document.getElementById("cartlink" + value);
-
-	var param = sessionStorage.getItem("products");
-
-	if (param) {
-		if (param.split(',').indexOf(value) === -1) {
-			param += value + '-' + q + ',';
-			sessionStorage.setItem("products", param);
+	http.open('GET', url, true);
+	http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+	http.onreadystatechange = function() {
+		if (http.readyState == 4 && http.status == 200) {
+			likelink.href = "javascript:setlike(" + id + ")";
+			toggleLikeStyle(id);
 		}
-	} else {
-		sessionStorage.setItem("products", value + '-' + q + ',');
 	}
+	http.send(id);
 
 }
 
-function toggleLikeStyle(id, value) {
+function toggleLikeStyle(id) {
 
 	var likelink = document.getElementById("likelink" + id);
-	var likecount = document.getElementById("likecount" + id);
 	likelink.classList.toggle("btn-danger");
 
 }
