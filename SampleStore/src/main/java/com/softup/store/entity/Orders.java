@@ -1,9 +1,9 @@
 package com.softup.store.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +26,7 @@ public class Orders implements Serializable {
 	private static final long serialVersionUID = -3672662224925418969L;
 
 	@Id
-	@Column(name = "ord_id", nullable = false)
+	@Column(name = "orderid", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
@@ -48,23 +48,23 @@ public class Orders implements Serializable {
 	private String cancelCause;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
-	private List<CartItem> items = new ArrayList<CartItem>();
+	private Set<CartItem> items = new HashSet<CartItem>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="username",nullable=false)
+	@JoinColumn(name = "username", nullable = false)
 	private User user;
 
 	public Orders() {
 	}
 
-	public Orders(Date deliveryDate, List<CartItem> items, User user) {
+	public Orders(Date deliveryDate, Set<CartItem> items, User user) {
 		this.orderDate = new Date();
 		this.deliveryDate = deliveryDate;
 		this.items = items;
 		this.user = user;
 	}
 
-	public Orders(List<CartItem> items, User user) {
+	public Orders(Set<CartItem> items, User user) {
 		this.orderDate = new Date();
 		this.items = items;
 		this.user = user;
@@ -193,11 +193,11 @@ public class Orders implements Serializable {
 		return true;
 	}
 
-	public List<CartItem> getItems() {
+	public Set<CartItem> getItems() {
 		return items;
 	}
 
-	public void setItems(List<CartItem> items) {
+	public void setItems(Set<CartItem> items) {
 		this.items = items;
 	}
 

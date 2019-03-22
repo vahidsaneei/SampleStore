@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -25,7 +27,8 @@ public class CartItem implements Serializable {
 	@Column(nullable = false)
 	private Long id;
 
-	@Column(name = "prd_id", nullable = false)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
 	private Product product;
 
 	@Column(name = "quantity", nullable = false, columnDefinition = "int(11) default 1")
