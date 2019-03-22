@@ -1,9 +1,14 @@
 function sendNewQuantity(id) {
 	var val = document.getElementById("quantity" + id).value;
-	var appUrl = "http://localhost:8080/SampleStore/";
+	var appUrl = "http://localhost:8080/SampleStore/store/completesale/" + id
+			+ "/" + val;
+	var url = "http://localhost:8080/SampleStore/addtocartlist";
+	sendData(null, appUrl);
+	window.location = url;
 }
 
 function sendData(data, targetUrl) {
+
 	var http;
 	if (window.XMLHttpRequest) {
 		http = new XMLHttpRequest();
@@ -16,9 +21,8 @@ function sendData(data, targetUrl) {
 	http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
 	http.onreadystatechange = function() {
 		if (http.readyState == 4 && http.status == 200) {
-			window.location = url;
-			alert('itemsSedsuccesfully');
+			alert('items updated Sedsuccesfully');
 		}
 	}
-	http.send();
+	http.send(data);
 }
