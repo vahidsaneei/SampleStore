@@ -15,6 +15,7 @@
 <c:url value="/resources/js/" var="scriptUrl" />
 <c:url value="/resources/images/" var="imagesUrl" />
 <script type="text/javascript" src="${scriptUrl }productScript.js"></script>
+<script type="text/javascript" src="${scriptUrl }jquery-3.2.1.min.js"></script>
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"
 	rel="stylesheet">
@@ -27,11 +28,11 @@
 </head>
 <body>
 	<center>
-		<c:set var="appurl" value="${pageContext.request.contextPath }" />
+		<c:set var="home" value="${pageContext.request.contextPath }" />
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
+					<li><a href="${home }/user/showprofile"><span class="glyphicon glyphicon-user">Dear,
 								<sec:authentication property="name" />
 						</span></a></li>
 					<li><a href="${logoutUrl }"><span
@@ -44,28 +45,39 @@
 				<li><a id="cartlink" href="addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${appurl }/products"><span
+					<li><a href="${home }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${appurl }/users"><span
+					<li><a href="${home }/users"><span
 							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${appurl }/orders"><span
+					<li><a href="${home }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${appurl }/stores"><span
+					<li><a href="${home }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				<li><a href="${appurl }/searchpage"><span
+				<li><a href="${home }/searchpage"><span
 						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${appurl }"><span
+				<li><a href="${home }"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
 		</div>
 		<div align="center">
+			<c:choose>
+				<c:when test="${liked != null }">
+					<c:set var="likeclass" value="btn btn-danger btn-lg" />
+					<c:set var="likeoperation"
+						value="javascript:setUnlike(${product.id })" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="likeclass" value="btn btn-default btn-lg" />
+					<c:set var="likeoperation"
+						value="javascript:setlike(${product.id })" />
+				</c:otherwise>
+			</c:choose>
 			<h2>${product.fullName }</h2>
 		</div>
-		<div align="center" class="container"
-			style="width: 90%; overflow: auto;">
+		<div align="center" style="width: 90%; overflow: auto;">
 
-			<table style="width: 100%" border="0">
+			<table class="table" style="width: 100%">
 				<tr align="center">
 					<td rowspan="10" style="background: lightblue; width: 30%"><div
 							class="imgbox">
@@ -127,24 +139,32 @@
 				</tr>
 				<tr>
 					<td colspan="5">
-						<div class="btn-group-vertical">
-							<a id="likelink${product.id}" class="btn btn-default btn-lg"
-								href="javascript:setlike(${product.id })"> <span
+						<div align="left" class="btn-group-horizontal">
+							<a id="likelink${product.id}" title="Like this product"
+								class="${likeclass }" href="${likeoperation }"> <span
 								class="glyphicon glyphicon-heart-empty"></span>
 							</a>
 							<c:if test="${product.quantity>0 }">
 								<a id="cartlink${product.id}" class="btn btn-success btn-lg"
-									onclick="addToCart(${product.id },1)"
-									href="${appurl }/addtocartlist/${product.id }"><span
+									title="Add to cart" onclick="addToCart(${product.id },1)"
+									href="${home }/addtocartlist/${product.id }"><span
 									class="glyphicon glyphicon-shopping-cart"></span></a>
 							</c:if>
 
-							<a class="btn btn-info btn-lg" href="${appurl }"><span
+							<a class="btn btn-info btn-lg" href="${home }"
+								title="Back to home"><span
 								class="glyphicon glyphicon-th-list"></span></a>
 						</div>
 					</td>
 				</tr>
 			</table>
+		</div>
+		<div>
+			<form:form action="${home }/store/addcomment/${product.id}"
+				method="POST">
+				Comment<input type="text" name="comment" id="comment" />
+				<input type="submit" class="btn btn-primary" value="Send Comment">
+			</form:form>
 		</div>
 	</center>
 </body>
