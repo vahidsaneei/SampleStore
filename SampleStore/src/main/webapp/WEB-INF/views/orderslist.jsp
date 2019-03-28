@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=windows-1256"
 	pageEncoding="windows-1256"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,37 +26,38 @@
 </head>
 <body>
 	<c:url value="/logout" var="logoutUrl" />
-
+	<c:set var="appurl" value="${pageContext.request.contextPath }" />
 	<!-- csrf for log out-->
 	<center>
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
+					<li><a href="user/showprofile"><span
+							class="glyphicon glyphicon-user">Dear, <sec:authentication
+									property="name" />
 						</span></a></li>
 					<li><a href="${logoutUrl }" onclick="logoutPerform();"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath }/login"><span
+					<li><a href="${ appurl}/login"><span
 							class="glyphicon glyphicon-user">Login</span></a></li>
 				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
+				<li><a id="cartlink" href="${appurl }/addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="products"><span
+					<li><a href="${appurl }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="users"><span class="glyphicon glyphicon-list">Users
-								Management</span></a></li>
-					<li><a href="orders"><span
+					<li><a href="${appurl }/users"><span
+							class="glyphicon glyphicon-list">Users Management</span></a></li>
+					<li><a href="${appurl }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="stores"><span
+					<li><a href="${appurl }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				<li><a href="search"><span
+				<li><a href="${appurl }/search"><span
 						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${pageContext.request.contextPath }"><span
+				<li><a href="${appurl}"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
 		</div>
@@ -72,18 +74,32 @@
 							<th>ID</th>
 							<th>Date</th>
 							<th>Delivery Date</th>
-							<th>User name</th>
+							<th>Customer</th>
+							<th>Success</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
 					<c:forEach items="${orders }" var="order">
-						<tr>
+						<tr>>
 							<td>${order.id }</td>
-							<td>${order.orderDate}</td>
-							<td>${order.deliveryDate }</td>
-							<td>${order.user }</td>
-							<td colspan="2"><a href="#" class="btn btn-danger">Remove</a><a
-								href="#" class="btn btn-info">Edit</a></td>
+							<td><fmt:formatDate value="${order.orderDate }" type="date"
+									pattern="dd-MM-yyyy" /></td>
+							<td><fmt:formatDate value="${order.deliveryDate }"
+									type="date" pattern="dd-MM-yyyy" /></td>
+							<td><a class="btn btn-primary" href="#">${order.user.username }</a></td>
+							<td><c:choose>
+									<c:when test="${order.success }">
+										<span style="background-color: green">Success</span>
+									</c:when>
+									<c:otherwise>In order yet</c:otherwise>
+								</c:choose></td>
+							<td colspan="3"><c:choose>
+									<c:when test="${order.success }">
+										<a href="#" class="btn btn-warning">Cancel order</a>
+										<a href="#" class="btn btn-info">Edit</a>
+									</c:when>
+								</c:choose><a href="${appurl }/orders/getorder/${order.id}"
+								class="btn btn-success">Show Details</a></td>
 						</tr>
 					</c:forEach>
 				</table>
