@@ -13,8 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,33 +43,39 @@ public class Orders implements Serializable {
 	@Column(name = "success", nullable = true, columnDefinition = "tinyint(1) default 0")
 	private boolean success;
 
-	@Column(name = "cancel", nullable = true, columnDefinition = "tinyint(1) default 0")
-	private boolean canceled;
+	@Column(name = "usercancel", nullable = true, columnDefinition = "tinyint(1) default 0")
+	private boolean canceledByUser;
 
-	@Column(name = "cause", nullable = true)
-	private String cancelCause;
+	@Column(name = "admincancel", nullable = true, columnDefinition = "tinyint(1) default 0")
+	private boolean canceledByAdmin;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
-	private Set<CartItem> items = new HashSet<CartItem>();
+	@Column(name = "usercause", nullable = true)
+	private String userCancelCause;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "username", nullable = false)
+	@Column(name = "admincause", nullable = true)
+	private String adminCancelCause;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "ORDERS_ITEMS", joinColumns = { @JoinColumn(name = "orderid") }, inverseJoinColumns = {
+			@JoinColumn(name = "item_id") })
+	private Set<CartItem> items = new HashSet<CartItem>(0);
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
 	private User user;
 
 	public Orders() {
 	}
 
-	public Orders(Date deliveryDate, Set<CartItem> items, User user) {
+	public Orders(Date deliveryDate, Set<CartItem> items) {
 		this.orderDate = new Date();
 		this.deliveryDate = deliveryDate;
 		this.items = items;
-		this.user = user;
 	}
 
-	public Orders(Set<CartItem> items, User user) {
+	public Orders(Set<CartItem> items) {
 		this.orderDate = new Date();
 		this.items = items;
-		this.user = user;
 	}
 
 	public Long getId() {
@@ -94,14 +102,6 @@ public class Orders implements Serializable {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public boolean isSuccess() {
 		return success;
 	}
@@ -110,40 +110,74 @@ public class Orders implements Serializable {
 		this.success = success;
 	}
 
+	public Set<CartItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<CartItem> items) {
+		this.items = items;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public boolean isCanceledByUser() {
+		return canceledByUser;
+	}
+
+	public void setCanceledByUser(boolean canceledByUser) {
+		this.canceledByUser = canceledByUser;
+	}
+
+	public boolean isCanceledByAdmin() {
+		return canceledByAdmin;
+	}
+
+	public void setCanceledByAdmin(boolean canceledByAdmin) {
+		this.canceledByAdmin = canceledByAdmin;
+	}
+
+	public String getUserCancelCause() {
+		return userCancelCause;
+	}
+
+	public void setUserCancelCause(String userCancelCause) {
+		this.userCancelCause = userCancelCause;
+	}
+
+	public String getAdminCancelCause() {
+		return adminCancelCause;
+	}
+
+	public void setAdminCancelCause(String adminCancelCause) {
+		this.adminCancelCause = adminCancelCause;
+	}
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + ", user=" + user
-				+ "]";
-	}
-
-	public boolean isCanceled() {
-		return canceled;
-	}
-
-	public void setCanceled(boolean canceled) {
-		this.canceled = canceled;
-	}
-
-	public String getCancelCause() {
-		return cancelCause;
-	}
-
-	public void setCancelCause(String cancelCause) {
-		this.cancelCause = cancelCause;
+		return "Order [id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + ", user="
+				+ getUser().getUsername() + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cancelCause == null) ? 0 : cancelCause.hashCode());
-		result = prime * result + (canceled ? 1231 : 1237);
+		result = prime * result + ((adminCancelCause == null) ? 0 : adminCancelCause.hashCode());
+		result = prime * result + (canceledByAdmin ? 1231 : 1237);
+		result = prime * result + (canceledByUser ? 1231 : 1237);
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		result = prime * result + ((orderDate == null) ? 0 : orderDate.hashCode());
 		result = prime * result + (success ? 1231 : 1237);
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((userCancelCause == null) ? 0 : userCancelCause.hashCode());
 		return result;
 	}
 
@@ -156,12 +190,14 @@ public class Orders implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Orders other = (Orders) obj;
-		if (cancelCause == null) {
-			if (other.cancelCause != null)
+		if (adminCancelCause == null) {
+			if (other.adminCancelCause != null)
 				return false;
-		} else if (!cancelCause.equals(other.cancelCause))
+		} else if (!adminCancelCause.equals(other.adminCancelCause))
 			return false;
-		if (canceled != other.canceled)
+		if (canceledByAdmin != other.canceledByAdmin)
+			return false;
+		if (canceledByUser != other.canceledByUser)
 			return false;
 		if (deliveryDate == null) {
 			if (other.deliveryDate != null)
@@ -190,15 +226,12 @@ public class Orders implements Serializable {
 				return false;
 		} else if (!user.equals(other.user))
 			return false;
+		if (userCancelCause == null) {
+			if (other.userCancelCause != null)
+				return false;
+		} else if (!userCancelCause.equals(other.userCancelCause))
+			return false;
 		return true;
-	}
-
-	public Set<CartItem> getItems() {
-		return items;
-	}
-
-	public void setItems(Set<CartItem> items) {
-		this.items = items;
 	}
 
 }
