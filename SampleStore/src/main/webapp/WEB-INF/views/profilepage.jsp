@@ -25,12 +25,14 @@
 </head>
 <body>
 	<center>
-		<c:set var="appurl" value="${pageContext.request.contextPath }" />
+		<c:set var="home" value="${pageContext.request.contextPath }" />
+		<c:url value="/logout" var="logoutUrl" />
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
+					<li><a href="${home }/user/showprofile"><span
+							class="glyphicon glyphicon-user">Dear, <sec:authentication
+									property="name" />
 						</span></a></li>
 					<li><a href="${logoutUrl }"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
@@ -42,13 +44,13 @@
 				<li><a id="cartlink" href="addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${appurl }/products"><span
+					<li><a href="${home }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${appurl }/users"><span
+					<li><a href="${home }/users"><span
 							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${appurl }/orders"><span
+					<li><a href="${home }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${appurl }/stores"><span
+					<li><a href="${home }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
 				<li><a href="searchpage"><span
@@ -59,20 +61,18 @@
 		</div>
 	</center>
 	<center>
-		<h2>Dear, ${user.username }</h2>
 		<div>
 			<ul>
 				<li><a href="#">My Information</a></li>
 				<li><a
-					href="store/getuserorders/${pageContext.request.userPrincipal.name }">My
+					href="${home }/store/getuserorders/${pageContext.request.userPrincipal.name }">My
 						orders</a></li>
 				<li><a
-					href="store/getusercopmments/${pageContext.request.userPrincipal.name }">My
+					href="${home }/store/getusercopmments/${pageContext.request.userPrincipal.name }">My
 						comments</a></li>
+				<li><a href="${home }/user/myfavorites">My favorite
+						Products</a></li>
 			</ul>
-		</div>
-		<div>
-			<a href="${pageContext.request.contextPath }">back to store</a>
 		</div>
 	</center>
 </body>
