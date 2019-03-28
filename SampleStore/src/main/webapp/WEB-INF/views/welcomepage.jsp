@@ -31,7 +31,7 @@
 </head>
 <body>
 	<c:url value="/logout" var="logoutUrl" />
-
+	<c:set var="home" value="${pageContext.request.contextPath }"/>
 	<!-- csrf for log out-->
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -39,9 +39,9 @@
 	</form>
 	<center>
 		<div align="center">
-			<ul>
+			<ul class="nav navbar-nav">
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="user/showprofile"><span
+					<li><a href="${home }/user/showprofile"><span
 							class="glyphicon glyphicon-user">Dear, <sec:authentication
 									property="name" />
 						</span></a></li>
@@ -49,26 +49,37 @@
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath }/login"><span
+					<li><a href="${home }/login"><span
 							class="glyphicon glyphicon-user">Login</span></a></li>
 				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
+				<li><a id="cartlink" href="${home }/addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="products"><span
+					<li><a href="${home }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="users"><span class="glyphicon glyphicon-list">Users
+					<li><a href="${home }/users"><span class="glyphicon glyphicon-list">Users
 								Management</span></a></li>
-					<li><a href="orders"><span
+					<li><a href="${home }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="stores"><span
+					<li><a href="${home }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				<li><a href="search"><span
-						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${pageContext.request.contextPath }"><span
+				
+				<li class="active"><a
+					href="${home }"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
+			<form name="navForm" class="navbar-form navbar-right" action="${home }/search" method="post">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search"
+						name="search">
+					<div class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
 		</div>
 	</center>
 	<center>
@@ -83,7 +94,7 @@
 						</div>
 
 						<a href="showdetails/${product.id }">
-								<center>
+							<center>
 								<div align="center" class="details">
 									<div align="center" class="content">
 										<h2>${product.fullName }</h2>
@@ -99,7 +110,7 @@
 													<td>Price :${product.price }</td>
 												</tr>
 											</c:if>
-											<c:if test="${product.quantity==0 }">
+											<c:if test="${product.quantity<=0 }">
 												<tr align="center">
 													<td><p style="color: red;">Not available</p></td>
 												</tr>
