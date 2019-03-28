@@ -19,6 +19,10 @@ public interface ProductService {
 	String updateProduct(Product product);
 
 	List<Product> findByName(String name);
+	
+	List<Product> searchInAllItems(String search);
+	
+	List<Product> findByCompanyName(String comapnyName);
 
 	void setLike(Long id,User user);
 	

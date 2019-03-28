@@ -7,20 +7,25 @@ import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 
 public interface ProductDao {
+	
 	List<Product> getAllProducts();
-
+	
 	Product findById(Long id);
-
+	
 	String addProduct(Product product);
-
+	
 	String removeProduct(Long id);
 	
 	String updateProduct(Product product);
-
-	List<Product> findByName(String name);
 	
 	void setLike(Long id,User user);
 
+	List<Product> searchInAllItems(String search);
+
+	List<Product> findByName(String name);
+	
+	List<Product> findByCompanyName(String comapnyName);
+	
 	List<Product> getNewestProducts();
 
 	List<Product> getPopularProducts();
