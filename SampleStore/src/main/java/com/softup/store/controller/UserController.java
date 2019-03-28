@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.interfaces.UserService;
 
@@ -29,6 +30,20 @@ public class UserController {
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.findByUsername(name);
 		model.addObject("user", user);
+		return model;
+	}
+
+	@RequestMapping(value = "user/myfavorites", method = RequestMethod.GET)
+	public ModelAndView myFavoriteProducts() {
+		ModelAndView model = new ModelAndView("myfavorite");
+		User user = userService.getCurrentUser();
+		List<Product> products = userService.getUserFavoriteProducts(user);
+
+		if (products.size() > 0)
+			model.addObject("products", products);
+		else
+			model.addObject("products", null);
+
 		return model;
 	}
 
@@ -55,6 +70,16 @@ public class UserController {
 		ModelAndView model = new ModelAndView("adminnewuser");
 		User user = userService.findById(id);
 		model.addObject("user", user);
+		return model;
+	}
+
+	@RequestMapping(value = "users/deleteuser/{id}", method = RequestMethod.GET)
+	public ModelAndView removeUser(@PathVariable("id") Long id) {
+		ModelAndView model = new ModelAndView("userlist");
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		List<User> users = userService.getAllUsers(username);
+		model.addObject("userList", users);
+
 		return model;
 	}
 
