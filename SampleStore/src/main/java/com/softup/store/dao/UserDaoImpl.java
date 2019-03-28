@@ -1,15 +1,18 @@
 package com.softup.store.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.softup.store.entity.Likes;
+import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.interfaces.UserDao;
 
@@ -31,6 +34,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public String addUser(User user) {
+
 		String result = "";
 		String pass = encoder.encode(user.getPassword());
 		user.setPassword(pass);
@@ -44,44 +48,49 @@ public class UserDaoImpl implements UserDao {
 				result = "error :user is already joined to store!";
 			else
 				result = "error :" + e.getCause().getMessage();
+		} finally {
+			session().clear();
 		}
 
 		return result;
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	public User findByUsername(String username) {
 
-		List<User> users = session().createCriteria(User.class, "From User").add(Restrictions.eq("username", username))
-				.list();
+		List<User> users = session().createQuery("From User where username= :user_name", User.class)
+				.setParameter("user_name", username).list();
 		User user = null;
 
 		if (users.size() > 0) {
 			user = users.get(0);
 		}
-		session().clear();
 		return user;
 	}
 
 	public List<User> getAllUsers(String username) {
 		List<User> users = session().createQuery("From User where username !=?", User.class).setParameter(0, username)
 				.list();
+
 		return users;
 	}
 
 	public User findById(long id) {
-		return session().get(User.class, id);
+		User user = session().get(User.class, id);
+
+		return user;
 	}
 
 	public List<User> findByAddress(String address) {
 		List<User> users = session().createQuery("From User where address =?", User.class).setParameter(0, address)
 				.list();
+
 		return users;
 	}
 
 	public List<User> findByPhoneNumber(String number) {
 		List<User> users = session().createQuery("From User where phoneNumber =?", User.class).setParameter(0, number)
 				.list();
+
 		return users;
 	}
 
@@ -123,6 +132,25 @@ public class UserDaoImpl implements UserDao {
 		}
 
 		return result;
+	}
+
+	public List<Product> getUserFavoriteProducts(User user) {
+		List<Likes> likes = session().createQuery("From Likes where user =:user", Likes.class)
+				.setParameter("user", user).list();
+
+		List<Product> products = new ArrayList<Product>();
+
+		for (Likes like : likes) {
+			products.add(like.getProduct());
+		}
+
+		return products;
+	}
+
+	public User getCurrentUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = findByUsername(username);
+		return user;
 	}
 
 }

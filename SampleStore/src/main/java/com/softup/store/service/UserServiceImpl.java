@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.interfaces.UserDao;
 import com.softup.store.interfaces.UserService;
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 		return userDao.addUser(user);
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = true)
 	public User findByUsername(String username) {
 		return userDao.findByUsername(username);
 	}
@@ -84,6 +84,14 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public String updateUser(User user) {
 		return userDao.updateUser(user);
+	}
+
+	public List<Product> getUserFavoriteProducts(User user) {
+		return userDao.getUserFavoriteProducts(user);
+	}
+
+	public User getCurrentUser() {
+		return userDao.getCurrentUser();
 	}
 
 }
