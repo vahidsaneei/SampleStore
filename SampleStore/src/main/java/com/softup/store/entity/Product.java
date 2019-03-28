@@ -2,7 +2,10 @@ package com.softup.store.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,7 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,8 +66,14 @@ public class Product implements Serializable {
 	@Column(name = "description", nullable = true)
 	private String description;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-	private CartItem cardItem;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	private Set<CartItem> items;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	private List<Comment> comments = new ArrayList<Comment>();
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	private List<Likes> likes = new ArrayList<Likes>();
 
 	public Product(String fullName, String companyName, Date expiryDate, Integer quantity, BigDecimal price,
 			String description) {
@@ -294,12 +303,28 @@ public class Product implements Serializable {
 		return true;
 	}
 
-	public CartItem getCardItem() {
-		return cardItem;
+	public Set<CartItem> getItems() {
+		return items;
 	}
 
-	public void setCardItem(CartItem cardItem) {
-		this.cardItem = cardItem;
+	public void setItems(Set<CartItem> items) {
+		this.items = items;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Likes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Likes> likes) {
+		this.likes = likes;
 	}
 
 }
