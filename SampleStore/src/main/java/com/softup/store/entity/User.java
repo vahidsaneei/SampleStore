@@ -28,8 +28,7 @@ public class User implements Serializable, UserDetails {
 	private static final long serialVersionUID = -8245107356306518473L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Column(name = "username", nullable = false, unique = true, length = 50)
@@ -63,10 +62,13 @@ public class User implements Serializable, UserDetails {
 	private Set<UserRole> userRoles = new HashSet<UserRole>(0);
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	private List<Orders> orders = new ArrayList<Orders>();
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Comment> comments = new ArrayList<Comment>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-	private List<Orders> orders = new ArrayList<Orders>();
+	private List<Likes> likes = new ArrayList<Likes>();
 
 	public User() {
 	}
@@ -160,22 +162,6 @@ public class User implements Serializable, UserDetails {
 		this.gender = gender;
 	}
 
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public List<Orders> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Orders> orders) {
-		this.orders = orders;
-	}
-
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
@@ -238,6 +224,14 @@ public class User implements Serializable, UserDetails {
 		return true;
 	}
 
+	public List<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Orders> orders) {
+		this.orders = orders;
+	}
+
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
@@ -272,6 +266,22 @@ public class User implements Serializable, UserDetails {
 
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
 		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Likes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Likes> likes) {
+		this.likes = likes;
 	}
 
 }
