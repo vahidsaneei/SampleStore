@@ -6,7 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.softup.store.entity.User;
+import com.softup.store.interfaces.UserService;
+
 public class StoreUtils {
+
+	@Autowired
+	static UserService userService;
 
 	@SuppressWarnings("deprecation")
 	public static Date deliveryDate(Date date, int num) {
@@ -42,4 +51,9 @@ public class StoreUtils {
 		}
 	}
 
+	public static User findUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = userService.findByUsername(username);
+		return user;
+	}
 }
