@@ -120,7 +120,7 @@ function setUnlike(id) {
 	http.onreadystatechange = function() {
 		if (http.readyState == 4 && http.status == 200) {
 			likelink.href = "javascript:setlike(" + id + ")";
-			toggleLikeStyle(id);
+			toggleunLikeStyle(id);
 		}
 	}
 	http.send(id);
@@ -130,6 +130,14 @@ function setUnlike(id) {
 function toggleLikeStyle(id) {
 
 	var likelink = document.getElementById("likelink" + id);
+	console.log("setted");
 	likelink.classList.toggle("btn-danger");
+
+}
+function toggleunLikeStyle(id) {
+
+	var likelink = document.getElementById("likelink" + id);
+	console.log("setted");
+	likelink.classList.toggle("btn-default");
 
 }
