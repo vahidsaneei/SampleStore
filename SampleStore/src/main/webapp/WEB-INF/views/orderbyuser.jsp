@@ -60,7 +60,7 @@
 		</div>
 	</center>
 	<center>
-		
+
 		<h2>Completing order</h2>
 		<div>
 			<table class="table table-hover">
@@ -74,8 +74,7 @@
 				</thead>
 				<c:set var="total" value="0"></c:set>
 				<c:forEach var="item" items="${items }">
-					<c:set var="total"
-						value="${total+item.totalprice }"></c:set>
+					<c:set var="total" value="${total+item.totalprice }"></c:set>
 					<tr>
 						<td>${item.product.fullName }</td>
 						<td>${item.product.price }</td>
@@ -96,13 +95,20 @@
 			</table>
 		</div>
 		<div>
-			<h3>Customer Info</h3>
-			<br />
-			<h4>Customer name ${userinfo.username }</h4>
-			<br />
-			<h4>Address ${userinfo.address }</h4>
-			<br />
-			<h4>PhoneNumber ${userinfo.phoneNumber }</h4>
+			<table class="table table-striped table-hover" title="Customer Info">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Address</th>
+						<th>Phone Number</th>
+					</tr>
+				</thead>
+				<tr>
+					<td><strong>${userinfo.username }</strong></td>
+					<td><strong>${userinfo.address }</strong></td>
+					<td><strong>${userinfo.phoneNumber}</strong></td>
+				</tr>
+			</table>
 		</div>
 	</center>
 </body>
