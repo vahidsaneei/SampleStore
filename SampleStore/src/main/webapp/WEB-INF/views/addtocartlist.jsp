@@ -92,7 +92,6 @@
 									<td>${item.product.price }</td>
 									<td><input type="number" id="quantity${item.product.id }"
 										name="quantity" min="1" max="10" step="1"
-										onchange="javascript:sendNewQuantity(${item.product.id })"
 										value="${item.quantity }"></td>
 									<td>${item.totalprice }</td>
 									<td><a
