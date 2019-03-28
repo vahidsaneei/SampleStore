@@ -6,13 +6,12 @@ import java.util.List;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Period;
 import com.softup.store.entity.Product;
-
-
+import com.softup.store.entity.User;
 
 public interface OrdersDao {
 
 	List<Orders> getAllOrders();
-	
+
 	String addOrders(Orders orders);
 
 	String updateOrders(Orders orders);
@@ -23,11 +22,15 @@ public interface OrdersDao {
 
 	List<Orders> findByDate(Date date);
 
+	List<Orders> findUserOrders(User user);
+
 	List<Orders> canceledOrders();
 
 	List<Orders> completeOrders();
 
-	String cancelOrder(Orders orders, String cause);
+	String cancelOrderByUser(Orders orders, String cause);
+
+	String cancelOrderByAdmin(Orders orders, String cause);
 
 	List<Orders> findOrdersByProduct(Product product);
 
