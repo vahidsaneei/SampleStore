@@ -10,17 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.softup.store.entity.CartItem;
+import com.softup.store.entity.Comment;
 import com.softup.store.entity.Likes;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Product;
@@ -159,10 +163,27 @@ public class StoreController {
 		return -1;
 	}
 
-	@RequestMapping(value = "/store/setlike/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "store/addcomment/{id}", method = RequestMethod.POST)
+	public String addComment(@RequestBody(required = true) String body, @PathVariable("id") Long id) {
+		String redirect = "redirect:/showdetails/" + id;
+
+		Comment comment = new Comment(body);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = findUser(username);
+		System.err.println(body);
+		Product product = productService.findById(id);
+		comment.setProduct(product);
+		comment.setUser(user);
+
+		return redirect;
+	}
+
+	@RequestMapping(value = "/store/setlike/{id}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(code = HttpStatus.OK)
 	public void setLike(@PathVariable("id") Long id) {
 		Product p = productService.findById(id);
-		User user = findUser();
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = findUser(username);
 
 		Likes like = new Likes(user, p);
 		String result = likeService.setLike(like);
@@ -174,7 +195,8 @@ public class StoreController {
 	@RequestMapping(value = "/store/unlike/{id}", method = RequestMethod.GET)
 	public void unLike(@PathVariable("id") Long id) {
 		Product p = productService.findById(id);
-		User user = findUser();
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = findUser(username);
 		Likes like = new Likes(user, p);
 		String result = likeService.unLike(like);
 
@@ -182,26 +204,37 @@ public class StoreController {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/store/completesale/{id}/{val}", method = RequestMethod.POST)
-	public ModelAndView loadOrder(@PathVariable("id") Long id, @PathVariable("val") Integer value, HttpSession session,
-			HttpServletRequest request) {
+	@RequestMapping(value = "search", method = RequestMethod.POST)
+	public ModelAndView doSerach(HttpServletRequest request) {
+		ModelAndView model = new ModelAndView("welcomepage");
+		String search=request.getParameter("search");
+		List<Product> products = productService.searchInAllItems(search);
+		model.addObject("products", products);
+		return model;
+	}
 
-		ModelAndView model = new ModelAndView("addtocartlist");
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/store/completesale", method = RequestMethod.POST)
+	public ModelAndView loadOrder(HttpSession session, HttpServletRequest request) {
+
+		String[] vals = request.getParameterValues("quantity");
+		ModelAndView model = new ModelAndView("orderbyuser");
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		List<CartItem> products = (List<CartItem>) session.getAttribute("cart");
 
 		for (int i = 0; i < products.size(); i++) {
-			if (products.get(i).getProduct().getId() == id) {
-				products.get(i).setQuantity(value);
-				System.err.println("product quantity set.");
-			}
+			products.get(i).setQuantity(Integer.parseInt(vals[i]));
 		}
 
 		model.addObject("items", products);
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.findByUsername(username);
+		User user = findUser(username);
 		model.addObject("userinfo", user);
 		return model;
+	}
+
+	public User findUser(String username) {
+		User user = userService.findByUsername(username);
+		return user;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -209,28 +242,22 @@ public class StoreController {
 	public ModelAndView addOrder(HttpSession session) {
 
 		ModelAndView model = new ModelAndView();
-
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		// create list of products that we have to add in orders
 		List<CartItem> items = (List<CartItem>) session.getAttribute("cart");
-		Set<CartItem> itemsSet = new HashSet<CartItem>();
+		Set<CartItem> itemsSet = new HashSet<CartItem>(items);
 
-		// find user by username to set orders userinfo
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.findByUsername(username);
+		// find user that ordered
+		User user = findUser(username);
 
 		// new order generated and setter methods invoke
-		Orders order = new Orders(itemsSet, user);
+		Orders order = new Orders(itemsSet);
 		Date d = new Date();
 		Date delivery = StoreUtils.deliveryDate(d, 3);
 		order.setOrderDate(d);
 		order.setDeliveryDate(delivery);
-		order.setUser(user);
 		order.setItems(itemsSet);
-
-		for (CartItem cartItem : items) {
-			cartItem.setOrder(order);
-			itemsSet.add(cartItem);
-		}
+		order.setUser(user);
 
 		String addOrders = orderService.addOrders(order);
 		System.err.println("new order add status " + addOrders + "-------------");
@@ -253,10 +280,14 @@ public class StoreController {
 		return model;
 	}
 
-	private User findUser() {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.findByUsername(username);
-		return user;
-	}
+	@RequestMapping(value = "store/getuserorders/{username}", method = RequestMethod.GET)
+	public ModelAndView getUserOrders(@PathVariable("username") String username) {
 
+		ModelAndView model = new ModelAndView("myorders");
+		User user = findUser(username);
+		List<Orders> userOrders = orderService.findUserOrders(user);
+		model.addObject("orders", userOrders);
+		model.addObject("userinfo", user);
+		return model;
+	}
 }
