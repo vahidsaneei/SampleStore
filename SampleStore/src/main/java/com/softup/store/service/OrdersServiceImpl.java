@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Period;
 import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.OrdersDao;
 
@@ -20,7 +21,7 @@ public class OrdersServiceImpl implements OrderService {
 	@Autowired
 	OrdersDao ordersDao;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public Orders findById(Long id) {
 		return ordersDao.findById(id);
 	}
@@ -38,11 +39,6 @@ public class OrdersServiceImpl implements OrderService {
 	@Transactional
 	public List<Orders> completeOrders() {
 		return ordersDao.completeOrders();
-	}
-
-	@Transactional
-	public String cancelOrder(Orders orders, String cause) {
-		return ordersDao.cancelOrder(orders, cause);
 	}
 
 	@Transactional
@@ -73,6 +69,18 @@ public class OrdersServiceImpl implements OrderService {
 	@Transactional
 	public List<Orders> getAllOrders() {
 		return ordersDao.getAllOrders();
+	}
+
+	public String cancelOrderByUser(Orders orders, String cause) {
+		return ordersDao.cancelOrderByUser(orders, cause);
+	}
+
+	public String cancelOrderByAdmin(Orders orders, String cause) {
+		return ordersDao.cancelOrderByAdmin(orders, cause);
+	}
+
+	public List<Orders> findUserOrders(User user) {
+		return ordersDao.findUserOrders(user);
 	}
 
 }

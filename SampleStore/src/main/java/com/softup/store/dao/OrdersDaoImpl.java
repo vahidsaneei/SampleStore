@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.Period;
 import com.softup.store.entity.Product;
+import com.softup.store.entity.User;
 import com.softup.store.interfaces.OrdersDao;
 
 @Repository("ordersDao")
@@ -31,12 +32,15 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	public Orders findById(Long id) {
-		return session().get(Orders.class, id);
+		Orders orders = session().get(Orders.class, id);
+
+		return orders;
 	}
 
 	public List<Orders> findByDate(Date date) {
 		List<Orders> orders = session().createQuery("from orders where delivery=:date", Orders.class)
 				.setParameter(0, date, TemporalType.TIMESTAMP).list();
+
 		return orders;
 	}
 
@@ -52,19 +56,14 @@ public class OrdersDaoImpl implements OrdersDao {
 	public List<Orders> completeOrders() {
 		String sql = "SELECT * FROM ORDERS WHERE success=:success";
 		List<Orders> orders = session().createQuery(sql, Orders.class).setBoolean("success", Boolean.TRUE).list();
+
 		return orders;
-	}
-
-	public String cancelOrder(Orders orders, String cause) {
-		orders.setCancelCause(cause);
-		orders.setCanceled(true);
-		return updateOrders(orders);
-
 	}
 
 	public List<Orders> findOrdersByProduct(Product product) {
 		String sql = "SELECT From CartItem where prd_id=:prdId";
 		List<Orders> orders = session().createQuery(sql, Orders.class).setParameter(0, product.getId()).list();
+
 		return orders;
 	}
 
@@ -76,10 +75,11 @@ public class OrdersDaoImpl implements OrdersDao {
 		String result = "";
 
 		try {
-			Long id = (Long) session().save(orders);
-			result = Long.toString(id);
+			session().save(orders);
+			session().flush();
+			result = "success";
 
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (e.getMessage().toLowerCase().contains("duplicate"))
 				result = "error this  order already was exist";
 			else
@@ -97,8 +97,8 @@ public class OrdersDaoImpl implements OrdersDao {
 
 		try {
 			session().update(orders);
-			result = "success";
 			session().flush();
+			result = "success";
 
 		} catch (Exception e) {
 			result = "error " + e.getCause().getMessage();
@@ -116,8 +116,8 @@ public class OrdersDaoImpl implements OrdersDao {
 
 			if (orders != null) {
 				session().remove(orders);
-				result = "success";
 				session().flush();
+				result = "success";
 			} else {
 				result = "error :orders not found";
 			}
@@ -132,7 +132,28 @@ public class OrdersDaoImpl implements OrdersDao {
 
 	public List<Orders> getAllOrders() {
 		List<Orders> orders = session().createQuery("From Orders", Orders.class).list();
+
 		return orders;
+	}
+
+	public String cancelOrderByUser(Orders orders, String cause) {
+		orders.setUserCancelCause(cause);
+		orders.setCanceledByUser(true);
+		return updateOrders(orders);
+	}
+
+	public String cancelOrderByAdmin(Orders orders, String cause) {
+		orders.setAdminCancelCause(cause);
+		orders.setCanceledByAdmin(true);
+		return updateOrders(orders);
+	}
+
+	public List<Orders> findUserOrders(User user) {
+
+		List<Orders> userOrders = session().createQuery("From Orders where user=:user", Orders.class)
+				.setParameter("user", user).list();
+
+		return userOrders;
 	}
 
 }
