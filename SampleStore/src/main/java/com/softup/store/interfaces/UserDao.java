@@ -2,6 +2,7 @@ package com.softup.store.interfaces;
 
 import java.util.List;
 
+import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 
 public interface UserDao {
@@ -15,6 +16,8 @@ public interface UserDao {
 	List<User> getAllUsers(String username);
 
 	User findById(long id);
+	
+	List<Product> getUserFavoriteProducts(User user);
 
 	List<User> findByAddress(String address);
 
@@ -29,4 +32,6 @@ public interface UserDao {
 	List<User> getExpireCredentialUser();
 
 	void resetPassword(User user, String newPass);
+
+	User getCurrentUser();
 }

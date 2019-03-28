@@ -2,10 +2,13 @@ package com.softup.store.interfaces;
 
 import java.util.List;
 
+import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 
 public interface UserService {
 
+	User getCurrentUser();
+	
 	String updateUser(User user);
 
 	String addUser(User user);
@@ -15,6 +18,8 @@ public interface UserService {
 	List<User> getAllUsers(String exceptUsername);
 
 	User findById(long id);
+
+	List<Product> getUserFavoriteProducts(User user);
 
 	List<User> findByAddress(String address);
 
