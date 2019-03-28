@@ -12,24 +12,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "saleitems", uniqueConstraints = {})
+@Table(name = "items")
 public class CartItem implements Serializable {
 
 	private static final long serialVersionUID = 7968604053015663078L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(nullable = false)
+	@Column(name = "item_id", nullable = false)
 	private Long id;
-
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
-	private Product product;
 
 	@Column(name = "quantity", nullable = false, columnDefinition = "int(11) default 1")
 	private Integer quantity;
@@ -37,9 +31,9 @@ public class CartItem implements Serializable {
 	@Column(name = "totalprice", nullable = false)
 	private BigDecimal totalprice;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "orderid", nullable = false)
-	private Orders order;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "prd_id", nullable = false)
+	private Product product;
 
 	public CartItem(Product product, Integer quantity) {
 		this.product = product;
@@ -72,6 +66,7 @@ public class CartItem implements Serializable {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+		setTotalprice();
 	}
 
 	public BigDecimal getTotalprice() {
@@ -81,13 +76,4 @@ public class CartItem implements Serializable {
 	public void setTotalprice() {
 		this.totalprice = getProduct().getPrice().multiply(new BigDecimal(getQuantity()));
 	}
-
-	public Orders getOrder() {
-		return order;
-	}
-
-	public void setOrder(Orders order) {
-		this.order = order;
-	}
-
 }
