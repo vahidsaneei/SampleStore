@@ -24,11 +24,9 @@
 <body onload='document.loginForm.username.focus();'>
 
 	<div align="center">
-		<h1>Login to Store</h1>
+		<h1>Welcome to Store</h1>
 
-		<div id="login-box">
-
-			<h2>Login with Username and Password</h2>
+		<div id="login-box" align="center">
 
 			<c:if test="${not empty error}">
 				<div class="error">${error}</div>
@@ -42,27 +40,28 @@
 
 				<table>
 					<tr>
-						<td>User:</td>
-						<td><input type='text' name='username' value=''
+						<td><label for="username">User name</label><input
+							tabindex="0" type="text" name="username" class="form-control"
 							placeholder="insert your username"></td>
 					</tr>
 					<tr>
-						<td>Password:</td>
-						<td><input type='password' name='password' /></td>
+						<td><label for="password">Password:</label><input
+							type="password" name="password" class="form-control" /></td>
 					</tr>
 					<tr>
-						<td colspan='2'><input name="submit" type="submit"
-							value="Login" /></td>
+						<td><input type="checkbox" title="Remember Me"
+							name="remember" class="form-control" />Remember Me</td>
+					</tr>
+					<tr>
+						<td colspan='2'><input class="btn btn-primary" name="submit"
+							type="submit" value="Login" /><a class="btn btn-success"
+							href="${pageContext.request.contextPath }/register">I'm a new
+								User</a></td>
 					</tr>
 				</table>
 				<input type="hidden" name="${_csrf.parameterName}"
 					value="${_csrf.token}" />
-
 			</form>
-		</div>
-		<div align="center">
-			<a href="${pageContext.request.contextPath }/register">I'm a new
-				User</a>
 		</div>
 	</div>
 </body>
