@@ -23,7 +23,7 @@
 <script src="${scriptUrl }productScript.js" type="text/javascript"></script>
 </head>
 <body>
-	<c:set var="url">${pageContext.request.contextPath}</c:set>
+	<c:set var="appurl">${pageContext.request.contextPath}</c:set>
 	<c:url value="/logout" var="logoutUrl" />
 
 	<!-- csrf for log out-->
@@ -35,44 +35,45 @@
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
+					<li><a href="${appurl }/user/showprofile"><span
+							class="glyphicon glyphicon-user">Dear, <sec:authentication
+									property="name" />
 						</span></a></li>
 					<li><a href="${logoutUrl }"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath }/login"><span
+					<li><a href="${appurl }/login"><span
 							class="glyphicon glyphicon-user">Login</span></a></li>
 				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
+				<li><a id="cartlink" href="${appurl }/addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="products"><span
+					<li><a href="${appurl }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="users"><span class="glyphicon glyphicon-list">Users
-								Management</span></a></li>
-					<li><a href="orders"><span
+					<li><a href="${appurl }/users"><span
+							class="glyphicon glyphicon-list">Users Management</span></a></li>
+					<li><a href="${appurl }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="stores"><span
+					<li><a href="${appurl }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				<li><a href="search"><span
+				<li><a href="${appurl }/search"><span
 						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${pageContext.request.contextPath }"><span
+				<li><a href="${appurl }/"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
 		</div>
 		<div class="container">
 			<center>
-				<a class="btn btn-info" href="${url }/products/newprod">Add new
-					product</a>
+				<a class="btn btn-info" href="${appurl }/products/newprod">Add
+					new product</a>
 			</center>
 		</div>
 		<center>
 			<div>
 				<center>
-					<table class="table table-hover" style="width: 100%" border="1">
+					<table class="table table-hover" style="width: 100%">
 						<thead>
 							<tr>
 								<th>Prd Name</th>
@@ -97,9 +98,9 @@
 								<td>${product.quantity }</td>
 								<td>${product.description }</td>
 								<td colspan="2"><div class="btn-group-vertical">
-										<a href="${url }/products/remove/${product.id }"
+										<a href="${appurl }/products/remove/${product.id }"
 											class="btn btn-danger">Delete</a> <a
-											href="${url }/products/edit/${product.id }"
+											href="${appurl }/products/edit/${product.id }"
 											class="btn btn-success">Edit</a>
 									</div></td>
 							</tr>
