@@ -1,8 +1,11 @@
 package com.softup.store.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -32,18 +35,22 @@ public class ProductDaoImpl implements ProductDao {
 
 	public List<Product> getAllProducts() {
 		List<Product> products = session().createQuery("From Product", Product.class).list();
+
 		return products;
 	}
 
 	public Product findById(Long id) {
-		return session().get(Product.class, id);
+		Product product = session().get(Product.class, id);
+
+		return product;
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<Product> findByName(String name) {
 		String param = "%" + name + "%";
-		List<Product> products = session().createCriteria(Product.class).add(Restrictions.like("fullname", param))
-				.list();
+		List<Product> products = session()
+				.createQuery("From Product prd where (prd.fullName) LIKE :fullName", Product.class)
+				.setParameter("fullName", param).list();
+
 		return products;
 	}
 
@@ -61,6 +68,7 @@ public class ProductDaoImpl implements ProductDao {
 	public List<Product> limitPrice(BigDecimal start, BigDecimal end) {
 		List<Product> products = session().createCriteria(Product.class).add(Restrictions.between("price", start, end))
 				.list();
+
 		return products;
 	}
 
@@ -69,12 +77,16 @@ public class ProductDaoImpl implements ProductDao {
 
 		List<Product> expireProducts = session().createQuery("from product where createdDate=:?", Product.class)
 				.setParameter(0, date).list();
+
 		return expireProducts;
 	}
 
 	public List<Product> getProductFromStore(String storename) {
-		// TODO Auto-generated method stub
-		return null;
+		String param = "%" + storename + "%";
+		List<Product> products = session().createQuery("From Product where seller LIKE :storename", Product.class)
+				.setParameter("storename", param).list();
+
+		return products;
 	}
 
 	public List<Product> mostCommentedProduct() {
@@ -89,8 +101,13 @@ public class ProductDaoImpl implements ProductDao {
 
 	public String rechargeProduct(Product product, Integer quantity) {
 		Integer i = product.getQuantity();
+
+		if (i == null)
+			i = 0;
+
 		i += quantity;
 		product.setQuantity(i);
+
 		String result = updateProduct(product);
 
 		return result;
@@ -99,6 +116,7 @@ public class ProductDaoImpl implements ProductDao {
 	public List<Product> emptyProducts() {
 		List<Product> products = session().createQuery("from product where quantity=:?", Product.class)
 				.setParameter(0, 0).list();
+
 		return products;
 	}
 
@@ -107,8 +125,8 @@ public class ProductDaoImpl implements ProductDao {
 
 		try {
 			session().save(product);
-			result = "success";
 			session().flush();
+			result = "success";
 		} catch (Exception e) {
 			if (e.getCause().getMessage().toLowerCase().contains("duplicate"))
 				result = "error product already exist";
@@ -128,8 +146,8 @@ public class ProductDaoImpl implements ProductDao {
 			Product p = findById(id);
 			if (p != null) {
 				session().remove(p);
-				result = "success";
 				session().flush();
+				result = "success";
 			} else {
 				result = "error product not found";
 			}
@@ -146,8 +164,8 @@ public class ProductDaoImpl implements ProductDao {
 
 		try {
 			session().update(product);
-			result = "success";
 			session().flush();
+			result = "success";
 		} catch (Exception e) {
 			result = "error " + e.getCause().getMessage();
 		} finally {
@@ -157,7 +175,7 @@ public class ProductDaoImpl implements ProductDao {
 		return result;
 	}
 
-	public void setLike(Long id,User user) {
+	public void setLike(Long id, User user) {
 		Product p = session().get(Product.class, id);
 		Integer like = p.getLikeCount();
 
@@ -168,6 +186,31 @@ public class ProductDaoImpl implements ProductDao {
 			p.setLikeCount(like);
 			updateProduct(p);
 		}
+	}
+
+	public List<Product> searchInAllItems(String search) {
+		Set<Product> products = new HashSet<Product>();
+
+		if (getProductFromStore(search).size() > 0)
+			products.addAll(getProductFromStore(search));
+
+		if (findByName(search).size() > 0)
+			products.addAll(findByName(search));
+
+		if (findByCompanyName(search).size() > 0)
+			products.addAll(findByCompanyName(search));
+
+		List<Product> founded = new ArrayList<Product>(products);
+
+		return founded;
+	}
+
+	public List<Product> findByCompanyName(String comapnyName) {
+		String param = "%" + comapnyName + "%";
+		List<Product> products = session().createQuery("From Product where companyName LIKE :company", Product.class)
+				.setParameter("company", param).list();
+
+		return products;
 	}
 
 }

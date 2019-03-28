@@ -43,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
 	public String removeProduct(Long id) {
 		return productDao.removeProduct(id);
 	}
+
 	@Transactional
 	public List<Product> getNewestProducts() {
 		return productDao.getNewestProducts();
@@ -87,13 +88,22 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> emptyProducts() {
 		return productDao.emptyProducts();
 	}
+
 	@Transactional
 	public String updateProduct(Product product) {
 		return productDao.updateProduct(product);
 	}
 
-	public void setLike(Long id,User user) {
-		productDao.setLike(id,user);
+	public void setLike(Long id, User user) {
+		productDao.setLike(id, user);
+	}
+
+	public List<Product> searchInAllItems(String search) {
+		return productDao.searchInAllItems(search);
+	}
+
+	public List<Product> findByCompanyName(String comapnyName) {
+		return productDao.findByCompanyName(comapnyName);
 	}
 
 }
