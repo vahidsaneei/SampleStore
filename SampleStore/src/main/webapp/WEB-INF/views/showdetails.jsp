@@ -85,7 +85,7 @@
 
 			<table class="table" style="width: 100%">
 				<tr align="center">
-					<td rowspan="10" style="background: lightblue; width: 30%"><div
+					<td rowspan="11" style="background: lightblue; width: 30%"><div
 							class="imgbox">
 							<img src="${imagesUrl }test.jpg" />
 
@@ -163,15 +163,20 @@
 						</div>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="5"><div>
+							<form:form action="${home }/store/addcomment/${product.id}"
+								method="POST">
+								<textarea name="comment" id="comment" style="float:left; resize: none;border-radius: 10px;" cols="50" rows="5"
+								 ></textarea>
+								<input style="float: left;" type="submit" class="btn btn-primary"
+									value="Send Comment">
+							</form:form>
+						</div></td>
+				</tr>
 			</table>
 		</div>
-		<div>
-			<form:form action="${home }/store/addcomment/${product.id}"
-				method="POST">
-				Comment<input type="text" name="comment" id="comment" />
-				<input type="submit" class="btn btn-primary" value="Send Comment">
-			</form:form>
-		</div>
+
 		<div>
 			<ul>
 				<c:forEach items="${commentList }" var="comment">
