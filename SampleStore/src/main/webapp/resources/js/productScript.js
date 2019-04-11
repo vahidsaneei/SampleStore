@@ -1,4 +1,3 @@
-
 var appUrl = "http://localhost:8080/SampleStore";
 
 function sendData(data, targetUrl, method) {
@@ -60,6 +59,12 @@ function goToCart() {
 function addOrder() {
 	var data = sessionStorage.getItem("products");
 	sendData(data, "/store/addorder?p=" + data, 'GET');
+}
+
+function doLogout() {
+	var form = document.getElementById("logoutForm");
+	form.method = "POST";
+	form.submit();
 }
 function checkLoggedUser() {
 	var http;
