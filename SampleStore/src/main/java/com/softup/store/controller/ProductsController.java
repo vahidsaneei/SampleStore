@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.softup.store.entity.Comment;
 import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.interfaces.LikeService;
@@ -96,12 +97,14 @@ public class ProductsController {
 	}
 
 	@RequestMapping(value = "/showdetails/{id}", method = RequestMethod.GET)
-	public ModelAndView getProduct(@PathVariable("id") String id, HttpServletRequest request) {
+	public ModelAndView getProduct(@PathVariable("id") Long id, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView("showdetails");
-		Product pr = productService.findById(Long.parseLong(id));
+		Product pr = productService.findById(id);
+		List<Comment> comments = pr.getComments();
 
 		model.addObject("product", pr);
+		model.addObject("commentList", comments);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = auth.getName();
 
