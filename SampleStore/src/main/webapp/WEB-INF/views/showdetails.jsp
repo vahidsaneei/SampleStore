@@ -170,7 +170,7 @@
 								<textarea name="comment" id="comment" style="float:left; resize: none;border-radius: 10px;" cols="50" rows="5"
 								 ></textarea>
 								<input style="float: left;" type="submit" class="btn btn-primary"
-									value="Send Comment">
+									value="Post Comment">
 							</form:form>
 						</div></td>
 				</tr>
