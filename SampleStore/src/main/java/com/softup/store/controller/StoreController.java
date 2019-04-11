@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +29,7 @@ import com.softup.store.entity.Orders;
 import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
 import com.softup.store.entity.UserRole;
+import com.softup.store.interfaces.CommentService;
 import com.softup.store.interfaces.LikeService;
 import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.ProductService;
@@ -48,6 +48,8 @@ public class StoreController {
 	OrderService orderService;
 	@Autowired
 	LikeService likeService;
+	@Autowired
+	CommentService commentService;
 
 	@RequestMapping(value = { "/", "index", "home" }, method = RequestMethod.GET)
 	public ModelAndView gethome() {
@@ -164,16 +166,20 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "store/addcomment/{id}", method = RequestMethod.POST)
-	public String addComment(@RequestBody(required = true) String body, @PathVariable("id") Long id) {
+	public String addComment(HttpServletRequest request, @PathVariable("id") Long id) {
+
+		String body = request.getParameter("comment");
 		String redirect = "redirect:/showdetails/" + id;
 
 		Comment comment = new Comment(body);
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = findUser(username);
-		System.err.println(body);
 		Product product = productService.findById(id);
 		comment.setProduct(product);
 		comment.setUser(user);
+
+		String result = commentService.addComment(comment);
+		System.err.println(result);
 
 		return redirect;
 	}
@@ -207,7 +213,7 @@ public class StoreController {
 	@RequestMapping(value = "search", method = RequestMethod.POST)
 	public ModelAndView doSerach(HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("welcomepage");
-		String search=request.getParameter("search");
+		String search = request.getParameter("search");
 		List<Product> products = productService.searchInAllItems(search);
 		model.addObject("products", products);
 		return model;
