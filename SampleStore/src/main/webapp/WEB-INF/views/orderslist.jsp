@@ -27,6 +27,7 @@
 <body>
 	<c:url value="/logout" var="logoutUrl" />
 	<c:set var="appurl" value="${pageContext.request.contextPath }" />
+	<jsp:useBean id="today" class="java.util.Date" />
 	<!-- csrf for log out-->
 	<center>
 		<div align="center">
@@ -63,6 +64,10 @@
 		</div>
 	</center>
 	<div align="center">
+		<p>
+			Today :
+			<fmt:formatDate value="${today }" type="date" pattern="dd-MM-yyyy" />
+		</p>
 		<center>
 			<div align="center">
 				<h2>Orders List</h2>
@@ -75,12 +80,12 @@
 							<th>Date</th>
 							<th>Delivery Date</th>
 							<th>Customer</th>
-							<th>Success</th>
+							<th>Status</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
 					<c:forEach items="${orders }" var="order">
-						<tr>>
+						<tr>
 							<td>${order.id }</td>
 							<td><fmt:formatDate value="${order.orderDate }" type="date"
 									pattern="dd-MM-yyyy" /></td>
@@ -88,8 +93,12 @@
 									type="date" pattern="dd-MM-yyyy" /></td>
 							<td><a class="btn btn-primary" href="#">${order.user.username }</a></td>
 							<td><c:choose>
-									<c:when test="${order.success }">
+									<c:when test="${order.success}">
 										<span style="background-color: green">Success</span>
+									</c:when>
+									<c:when
+										test="${!order.success && (order.deliveryDate.date lt today.date)}">
+										<span style="background-color: red">out of Date</span>
 									</c:when>
 									<c:otherwise>In order yet</c:otherwise>
 								</c:choose></td>
