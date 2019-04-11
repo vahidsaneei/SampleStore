@@ -29,13 +29,19 @@
 <body>
 	<center>
 		<c:set var="home" value="${pageContext.request.contextPath }" />
+		<c:set var="logoutUrl" value="logout" />
+		<form id="logoutForm" action="${home }/logout">
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</form>
 		<div align="center">
 			<ul>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="${home }/user/showprofile"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
+					<li><a href="${home }/user/showprofile"><span
+							class="glyphicon glyphicon-user">Dear, <sec:authentication
+									property="name" />
 						</span></a></li>
-					<li><a href="${logoutUrl }"><span
+					<li><a href="javascript:doLogout()"><span
 							class="glyphicon glyphicon-log-out">Logout</span></a></li>
 				</sec:authorize>
 				<sec:authorize access="!isAuthenticated()">
@@ -165,6 +171,20 @@
 				Comment<input type="text" name="comment" id="comment" />
 				<input type="submit" class="btn btn-primary" value="Send Comment">
 			</form:form>
+		</div>
+		<div>
+			<ul>
+				<c:forEach items="${commentList }" var="comment">
+					<li style="float: none;">
+						<div>
+							<div>
+								<span><strong>${comment.user.username }</strong> </span>
+							</div>
+						</div>
+						<p>${comment.text }</p>
+					</li>
+				</c:forEach>
+			</ul>
 		</div>
 	</center>
 </body>
