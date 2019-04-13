@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,12 +37,26 @@ public class ProductsController {
 	@Autowired
 	private LikeService likeService;
 
-	@RequestMapping(value = "/products")
-	public ModelAndView getAllProducts() {
+	@RequestMapping(value = "/products/{pageid}")
+	public ModelAndView getAllProducts(@PathVariable(required = false) Integer pageid) {
 
 		List<Product> products = productService.getAllProducts();
+		PagedListHolder<Product> pagedProduct = new PagedListHolder<Product>(products);
+		pagedProduct.setPageSize(10);
+		Integer maxpage = pagedProduct.getPageCount();
+
+		if (pageid <= 1)
+			pageid = 1;
+		if (pageid >= maxpage)
+			pageid = maxpage;
+
+		pagedProduct.setPage(pageid);
+
 		ModelAndView model = new ModelAndView("productList");
-		model.addObject("products", products);
+
+		model.addObject("products", pagedProduct.getPageList());
+		model.addObject("currentpage", pageid);
+		model.addObject("maxpage", maxpage);
 
 		return model;
 	}
