@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -51,11 +52,32 @@ public class StoreController {
 	@Autowired
 	CommentService commentService;
 
-	@RequestMapping(value = { "/", "index", "home" }, method = RequestMethod.GET)
-	public ModelAndView gethome() {
+	@RequestMapping(value = { "/{pageid}", "index/{pageid}", "home/{pageid}" }, method = RequestMethod.GET)
+	public ModelAndView gethome(@PathVariable(required = false,value="1") Integer pageid) {
+
 		ModelAndView model = new ModelAndView("welcomepage");
 		List<Product> products = productService.getAllProducts();
-		model.addObject("products", products);
+		PagedListHolder<Product> pagedProducts = new PagedListHolder<Product>(products);
+		pagedProducts.setPageSize(8);
+		Integer maxPage = pagedProducts.getPageCount();
+
+		if (pageid == null)
+			pageid = 1;
+
+		if (pageid <= 1) {
+			pageid = 1;
+		}
+
+		if (pageid > maxPage) {
+			pageid = maxPage;
+		}
+
+		pagedProducts.setPage(pageid - 1);
+
+		model.addObject("maxPage", maxPage);
+		model.addObject("products", pagedProducts.getPageList());
+		model.addObject("currentpage", pageid);
+
 		return model;
 	}
 
