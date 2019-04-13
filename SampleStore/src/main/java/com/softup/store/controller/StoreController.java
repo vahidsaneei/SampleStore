@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,31 +53,35 @@ public class StoreController {
 	@Autowired
 	CommentService commentService;
 
-	@RequestMapping(value = { "/{pageid}", "index/{pageid}", "home/{pageid}" }, method = RequestMethod.GET)
-	public ModelAndView gethome(@PathVariable(required = false,value="1") Integer pageid) {
+	@RequestMapping(value = { "/", "/{pageid}", "index/", "index/{pageid}", "home/",
+			"home/{pageid}" }, method = RequestMethod.GET)
+	public ModelAndView gethome(@PathVariable(required = false) Optional<Integer> pageid) {
 
 		ModelAndView model = new ModelAndView("welcomepage");
 		List<Product> products = productService.getAllProducts();
 		PagedListHolder<Product> pagedProducts = new PagedListHolder<Product>(products);
 		pagedProducts.setPageSize(8);
 		Integer maxPage = pagedProducts.getPageCount();
+		Integer pid = 0;
 
-		if (pageid == null)
-			pageid = 1;
+		if (pageid.isPresent())
+			pid = pageid.get();
+		else
+			pid = 1;
 
-		if (pageid <= 1) {
-			pageid = 1;
+		if (pid <= 1) {
+			pid = 1;
 		}
 
-		if (pageid > maxPage) {
-			pageid = maxPage;
+		if (pid > maxPage) {
+			pid = maxPage;
 		}
 
-		pagedProducts.setPage(pageid - 1);
+		pagedProducts.setPage(pid - 1);
 
 		model.addObject("maxPage", maxPage);
 		model.addObject("products", pagedProducts.getPageList());
-		model.addObject("currentpage", pageid);
+		model.addObject("currentpage", pid);
 
 		return model;
 	}
@@ -152,10 +157,10 @@ public class StoreController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "addtocartlist/{id}", "addtocartlist" }, method = RequestMethod.GET)
-	public String addToCart(@PathVariable(value = "id", required = false) String id, HttpSession session) {
+	public String addToCart(@PathVariable(value = "id", required = false) Optional<Long> prdid, HttpSession session) {
 
-		if (id != null) {
-			Long l = Long.parseLong(id);
+		if (prdid.isPresent()) {
+			Long l = prdid.get();
 			Product p = productService.findById(l);
 			if (session.getAttribute("cart") == null) {
 				List<CartItem> cart = new ArrayList<CartItem>();
@@ -172,7 +177,7 @@ public class StoreController {
 				}
 				session.setAttribute("cart", cart);
 			}
-		} else if (id == null && session.getAttribute("cart") == null) {
+		} else if ((!prdid.isPresent()) && session.getAttribute("cart") == null) {
 			session.setAttribute("cart", null);
 		}
 		return "addtocartlist";
