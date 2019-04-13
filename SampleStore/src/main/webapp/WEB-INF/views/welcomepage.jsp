@@ -31,7 +31,9 @@
 </head>
 <body>
 	<c:url value="/logout" var="logoutUrl" />
-	<c:set var="home" value="${pageContext.request.contextPath }"/>
+	<c:set var="home" value="${pageContext.request.contextPath }" />
+	<c:set var="linkDis" value="pointer-event:none;cursor:default;text-decoration:none" />
+
 	<!-- csrf for log out-->
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -57,19 +59,19 @@
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<li><a href="${home }/products"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${home }/users"><span class="glyphicon glyphicon-list">Users
-								Management</span></a></li>
+					<li><a href="${home }/users"><span
+							class="glyphicon glyphicon-list">Users Management</span></a></li>
 					<li><a href="${home }/orders"><span
 							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
 					<li><a href="${home }/stores"><span
 							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
 				</sec:authorize>
-				
-				<li class="active"><a
-					href="${home }"><span
+
+				<li class="active"><a href="${home }"><span
 						class="glyphicon glyphicon-home">Home</span></a></li>
 			</ul>
-			<form name="navForm" class="navbar-form navbar-right" action="${home }/search" method="post">
+			<form name="navForm" class="navbar-form navbar-right"
+				action="${home }/search" method="post">
 				<div class="input-group">
 					<input type="text" class="form-control" placeholder="Search"
 						name="search">
@@ -85,14 +87,12 @@
 	<center>
 		<div align="center" class="container">
 			<center>
-				<c:forEach var="product" items="${products }">
 
+				<c:forEach var="product" items="${products }">
 					<div class="box">
 						<div class="imgBox">
 							<img alt="image for this product" src="${ imagesUrl}test.jpg">
-
 						</div>
-
 						<a href="showdetails/${product.id }">
 							<center>
 								<div align="center" class="details">
@@ -123,6 +123,41 @@
 					</div>
 				</c:forEach>
 			</center>
+		</div>
+		<div align="center">
+			<span> 
+			<a class="btn btn-default" href="${home}/1">First</a>
+			<c:choose>
+					<c:when test="${currentpage>1 }">
+						<a class="btn btn-default" href="${home}/${currentpage-1}">Prev</a>
+					</c:when>
+					<c:otherwise>
+						<a class="btn btn-default" style="${linkDis}">Prev</a>
+					</c:otherwise>
+				</c:choose> 
+				
+				<c:if test="${currentpage>=maxPage }">
+					<c:set var="page" value="${maxPage }" />
+				</c:if> 
+				<c:if test="${currentpage-1 < 1}">
+					<c:set var="page" value="1" />
+				</c:if> 
+				<c:if test="${currentpage>=1 && currentpage<=magPage }">
+					<c:set var="page" value="${currentpage }" />
+				</c:if>
+				
+				${page } of ${maxPage }
+				  
+				<c:choose>
+					<c:when test="${currentpage<maxPage }">
+						<a class="btn btn-default" href="${home}/${currentpage+1}">Next</a>
+					</c:when>
+					<c:otherwise>
+						<a class="btn btn-default" style="${linkDis}">Next</a>
+					</c:otherwise>
+				</c:choose>
+				<a class="btn btn-default" href="${home}/${maxPage}">Last</a>
+			</span>
 		</div>
 	</center>
 </body>
