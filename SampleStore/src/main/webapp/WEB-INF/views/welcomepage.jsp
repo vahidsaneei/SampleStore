@@ -142,7 +142,7 @@
 				<c:if test="${currentpage-1 < 1}">
 					<c:set var="page" value="1" />
 				</c:if> 
-				<c:if test="${currentpage>=1 && currentpage<=magPage }">
+				<c:if test="${currentpage>=1 && currentpage<=maxPage }">
 					<c:set var="page" value="${currentpage }" />
 				</c:if>
 				
