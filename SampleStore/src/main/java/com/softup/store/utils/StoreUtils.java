@@ -56,4 +56,13 @@ public class StoreUtils {
 		User user = userService.findByUsername(username);
 		return user;
 	}
+
+	public static String nameGenerator(String part) {
+		
+		Date today=new Date();
+		String date=Integer.toString(today.getDate());
+		
+		
+		return null;
+	}
 }
