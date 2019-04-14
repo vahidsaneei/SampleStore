@@ -326,5 +326,4 @@ public class Product implements Serializable {
 	public void setLikes(List<Likes> likes) {
 		this.likes = likes;
 	}
-
 }
