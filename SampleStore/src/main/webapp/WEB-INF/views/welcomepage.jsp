@@ -32,7 +32,8 @@
 <body>
 	<c:url value="/logout" var="logoutUrl" />
 	<c:set var="home" value="${pageContext.request.contextPath }" />
-	<c:set var="linkDis" value="pointer-event:none;cursor:default;text-decoration:none" />
+	<c:set var="linkDis"
+		value="pointer-event:none;cursor:default;text-decoration:none" />
 
 	<!-- csrf for log out-->
 	<form action="${logoutUrl}" method="post" id="logoutForm">
@@ -57,7 +58,7 @@
 				<li><a id="cartlink" href="${home }/addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${home }/products"><span
+					<li><a href="${home }/products/1"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
 					<li><a href="${home }/users"><span
 							class="glyphicon glyphicon-list">Users Management</span></a></li>
@@ -91,7 +92,8 @@
 				<c:forEach var="product" items="${products }">
 					<div class="box">
 						<div class="imgBox">
-							<img alt="image for this product" src="${ imagesUrl}test.jpg">
+							<img alt="image for this product"
+								src="${imagesUrl }${product.id}/header.jpg">
 						</div>
 						<a href="showdetails/${product.id }">
 							<center>
@@ -125,38 +127,27 @@
 			</center>
 		</div>
 		<div align="center">
-			<span> 
-			<a class="btn btn-default" href="${home}/1">First</a>
-			<c:choose>
+			<span> <a class="btn btn-default" href="${home}/1">First</a> <c:choose>
 					<c:when test="${currentpage>1 }">
 						<a class="btn btn-default" href="${home}/${currentpage-1}">Prev</a>
 					</c:when>
 					<c:otherwise>
 						<a class="btn btn-default" style="${linkDis}">Prev</a>
 					</c:otherwise>
-				</c:choose> 
-				
-				<c:if test="${currentpage>=maxPage }">
+				</c:choose> <c:if test="${currentpage>=maxPage }">
 					<c:set var="page" value="${maxPage }" />
-				</c:if> 
-				<c:if test="${currentpage-1 < 1}">
+				</c:if> <c:if test="${currentpage-1 < 1}">
 					<c:set var="page" value="1" />
-				</c:if> 
-				<c:if test="${currentpage>=1 && currentpage<=maxPage }">
+				</c:if> <c:if test="${currentpage>=1 && currentpage<=maxPage }">
 					<c:set var="page" value="${currentpage }" />
-				</c:if>
-				
-				${page } of ${maxPage }
-				  
-				<c:choose>
+				</c:if> ${page } of ${maxPage } <c:choose>
 					<c:when test="${currentpage<maxPage }">
 						<a class="btn btn-default" href="${home}/${currentpage+1}">Next</a>
 					</c:when>
 					<c:otherwise>
 						<a class="btn btn-default" style="${linkDis}">Next</a>
 					</c:otherwise>
-				</c:choose>
-				<a class="btn btn-default" href="${home}/${maxPage}">Last</a>
+				</c:choose> <a class="btn btn-default" href="${home}/${maxPage}">Last</a>
 			</span>
 		</div>
 	</center>
