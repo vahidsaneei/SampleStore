@@ -28,7 +28,7 @@ public class Comment implements Serializable {
 	private String text;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "prd_id", nullable = true)
+	@JoinColumn(name = "prd_id", nullable = false)
 	private Product product;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
