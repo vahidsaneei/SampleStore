@@ -51,7 +51,7 @@
 				<li><a id="cartlink" href="addtocartlist"><span
 						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${home }/products"><span
+					<li><a href="${home }/products/1"><span
 							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
 					<li><a href="${home }/users"><span
 							class="glyphicon glyphicon-list">Users Management</span></a></li>
@@ -87,7 +87,7 @@
 				<tr align="center">
 					<td rowspan="11" style="background: lightblue; width: 30%"><div
 							class="imgbox">
-							<img src="${imagesUrl }test.jpg" />
+							<img src="${imagesUrl }${product.id}/header.jpg" />
 
 						</div></td>
 				</tr>
@@ -167,16 +167,18 @@
 					<td colspan="5"><div>
 							<form:form action="${home }/store/addcomment/${product.id}"
 								method="POST">
-								<textarea name="comment" id="comment" style="float:left; resize: none;border-radius: 10px;" cols="50" rows="5"
-								 ></textarea>
-								<input style="float: left;" type="submit" class="btn btn-primary"
-									value="Post Comment">
+								<textarea name="comment" id="comment"
+									style="float: left; resize: none; border-radius: 10px;"
+									cols="50" rows="5"></textarea>
+								<input style="float: left;" type="submit"
+									class="btn btn-primary" value="Post Comment">
 							</form:form>
 						</div></td>
 				</tr>
 			</table>
 		</div>
-
+		<div>
+		</div>
 		<div>
 			<ul>
 				<c:forEach items="${commentList }" var="comment">
