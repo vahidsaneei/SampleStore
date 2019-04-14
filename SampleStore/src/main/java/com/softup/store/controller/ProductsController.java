@@ -1,10 +1,14 @@
 package com.softup.store.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
@@ -15,7 +19,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -36,19 +43,20 @@ public class ProductsController {
 	private UserService userService;
 	@Autowired
 	private LikeService likeService;
+	@Autowired
+	private ServletContext context;
 
-	@RequestMapping(value = "/products/{pageid}")
-	public ModelAndView getAllProducts(@PathVariable(required = false) Integer pageid) {
+	@RequestMapping(value = { "/products/{page}", "/products/" })
+	public ModelAndView getAllProducts(@PathVariable(required = false) Optional<Integer> page) {
 
 		List<Product> products = productService.getAllProducts();
 		PagedListHolder<Product> pagedProduct = new PagedListHolder<Product>(products);
 		pagedProduct.setPageSize(10);
 		Integer maxpage = pagedProduct.getPageCount();
+		Integer pageid = 1;
 
-		if (pageid <= 1)
-			pageid = 1;
-		if (pageid >= maxpage)
-			pageid = maxpage;
+		if (page.isPresent())
+			pageid = page.get();
 
 		pagedProduct.setPage(pageid);
 
@@ -64,6 +72,7 @@ public class ProductsController {
 	@RequestMapping(value = "/products/newprod", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public ModelAndView newProduct() {
+
 		ModelAndView model = new ModelAndView("newproduct");
 		model.addObject("product", new Product());
 
@@ -105,9 +114,44 @@ public class ProductsController {
 			model.addObject("product", product);
 			model.addObject("error", result);
 		} else {
-			model.getModelMap().clear();
-			model.setViewName("redirect:/products");
+			model.setViewName("imagetoproducts");
+			model.addObject("prodid", result);
 		}
+		return model;
+	}
+
+	@RequestMapping(value = "products/filesave/{id}", method = RequestMethod.POST)
+	public ModelAndView saveProductFiles(@PathVariable("id") Long id,
+			@RequestParam("headerfile") CommonsMultipartFile headerImage,
+			@RequestParam("upFile") List<CommonsMultipartFile> files) {
+
+		ModelAndView model = new ModelAndView("newproduct");
+		model.addObject("product", new Product());
+		String path = context.getRealPath("\\resources\\images\\" + id);
+
+		try {
+
+			new File(path).mkdir();
+
+			String ext = FilenameUtils.getExtension(headerImage.getOriginalFilename());
+			File destination = new File(path + File.separator + "header." + ext);
+			headerImage.transferTo(destination);
+
+			for (int i = 0; i < files.size(); i++) {
+				if (files.get(i).getSize() > 0) {
+					String ext1 = FilenameUtils.getExtension(files.get(i).getOriginalFilename());
+					File dest = new File(path + File.separator + i + "." + ext1);
+					files.get(i).transferTo(dest);
+				}
+			}
+
+		} catch (Exception e) {
+			if (e instanceof MaxUploadSizeExceededException)
+				System.err.println("file is too big");
+			else
+				System.err.println(e.getMessage());
+		}
+
 		return model;
 	}
 
@@ -120,6 +164,7 @@ public class ProductsController {
 
 		model.addObject("product", pr);
 		model.addObject("commentList", comments);
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = auth.getName();
 
@@ -153,6 +198,8 @@ public class ProductsController {
 		businessList.add("Shoe and Sneakers");
 		businessList.add("Electronics");
 		businessList.add("Home Appliances");
+		businessList.add("Sport");
+		businessList.add("Other");
 
 		return businessList;
 	}
