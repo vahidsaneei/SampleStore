@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
@@ -32,11 +31,13 @@ import com.softup.store.entity.User;
 import com.softup.store.interfaces.LikeService;
 import com.softup.store.interfaces.ProductService;
 import com.softup.store.interfaces.UserService;
+import com.softup.store.utils.StoreUtils;
 
 @Controller
 @EnableWebMvc
 public class ProductsController {
 
+	private static final String RESOURCES_IMAGES = "\\resources\\images\\";
 	@Autowired
 	private ProductService productService;
 	@Autowired
@@ -125,26 +126,19 @@ public class ProductsController {
 			@RequestParam("headerfile") CommonsMultipartFile headerImage,
 			@RequestParam("upFile") List<CommonsMultipartFile> files) {
 
-		ModelAndView model = new ModelAndView("newproduct");
+		ModelAndView model = new ModelAndView("redirect:/products/newprod");
 		model.addObject("product", new Product());
-		String path = context.getRealPath("\\resources\\images\\" + id);
+		String path = context.getRealPath(RESOURCES_IMAGES + "productsImages\\" + id);
 
 		try {
-
 			new File(path).mkdir();
-
-			String ext = FilenameUtils.getExtension(headerImage.getOriginalFilename());
-			File destination = new File(path + File.separator + "header." + ext);
-			headerImage.transferTo(destination);
+			StoreUtils.fileUpload("header", path, headerImage);
 
 			for (int i = 0; i < files.size(); i++) {
 				if (files.get(i).getSize() > 0) {
-					String ext1 = FilenameUtils.getExtension(files.get(i).getOriginalFilename());
-					File dest = new File(path + File.separator + i + "." + ext1);
-					files.get(i).transferTo(dest);
+					StoreUtils.fileUpload(Integer.toString(i), path, files.get(i));
 				}
 			}
-
 		} catch (Exception e) {
 			if (e instanceof MaxUploadSizeExceededException)
 				System.err.println("file is too big");
