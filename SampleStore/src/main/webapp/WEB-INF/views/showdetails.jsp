@@ -87,7 +87,7 @@
 				<tr align="center">
 					<td rowspan="11" style="background: lightblue; width: 30%"><div
 							class="imgbox">
-							<img src="${imagesUrl }${product.id}/header.jpg" />
+							<img src="${imagesUrl }productsImages/${product.id}/header.jpg" />
 
 						</div></td>
 				</tr>
