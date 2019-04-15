@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -41,6 +42,8 @@ import com.softup.store.utils.StoreUtils;
 @Controller
 @EnableWebMvc
 public class StoreController {
+
+	private static final String RESOURCES_IMAGES = "\\resources\\images\\";
 
 	@Autowired
 	ProductService productService;
@@ -110,7 +113,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/saveuser", method = RequestMethod.POST)
-	public ModelAndView saveNewUser(@ModelAttribute User user) {
+	public ModelAndView saveNewUser(@ModelAttribute User user, @RequestParam("userimg") CommonsMultipartFile file) {
 
 		ModelAndView model = new ModelAndView();
 
@@ -129,6 +132,17 @@ public class StoreController {
 		// invoke service to add user in database
 		String result = userService.addUser(user);
 
+		// upload image file if its present
+		if (file.getSize() > 0) {
+			String partname = user.getUsername() + "_" + result;
+			String path = RESOURCES_IMAGES + "usersAvartars";
+			boolean fileUpload = StoreUtils.fileUpload(partname, path, file);
+			if(!fileUpload) {
+				System.err.println("upload failed");
+			}
+		}else {
+			System.err.println("file not found!!!!!!!!1");
+		}
 		if (!result.toLowerCase().startsWith("error")) {
 			model.setViewName("loginForm");
 		} else {
