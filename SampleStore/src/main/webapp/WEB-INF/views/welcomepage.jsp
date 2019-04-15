@@ -93,7 +93,7 @@
 					<div class="box">
 						<div class="imgBox">
 							<img alt="image for this product"
-								src="${imagesUrl }${product.id}/header.jpg">
+								src="${imagesUrl }productsImages/${product.id}/header.jpg">
 						</div>
 						<a href="showdetails/${product.id }">
 							<center>
