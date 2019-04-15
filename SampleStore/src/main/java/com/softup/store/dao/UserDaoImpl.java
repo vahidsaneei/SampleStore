@@ -40,9 +40,9 @@ public class UserDaoImpl implements UserDao {
 		user.setPassword(pass);
 
 		try {
-			session().save(user);
+			Long id = (Long) session().save(user);
 			session().flush();
-			result = "success";
+			result = "" + id;
 		} catch (Exception e) {
 			if (e.getCause().getMessage().toLowerCase().contains("duplicate"))
 				result = "error :user is already joined to store!";
