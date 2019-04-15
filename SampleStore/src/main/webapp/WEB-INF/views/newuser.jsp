@@ -63,7 +63,7 @@
 			<h2>Welcome to registration page</h2>
 		</div>
 		<div></div>
-		<form:form method="POST" action="saveuser" modelAttribute="user">
+		<form:form method="POST" action="saveuser" modelAttribute="user" enctype="multipart/form-data">
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 			<table>
@@ -92,7 +92,11 @@
 					<td><form:input path="phoneNumber" cssClass="form-control" /></td>
 				</tr>
 			</table>
+			<div>
+				Select avatar image:<input type="file" name="userimg"  class="file"/>
+			</div>
 			<br>
+
 			<center>
 				<input type="submit" class="btn btn-info" value="Register" />
 			</center>
