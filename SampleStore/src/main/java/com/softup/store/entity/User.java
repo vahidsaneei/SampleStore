@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -57,26 +58,30 @@ public class User implements Serializable, UserDetails {
 
 	@Column(name = "phonenumber", nullable = true)
 	private String phoneNumber;
+	
+	@Transient
+	private String passwordConfirm;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserRole> userRoles = new HashSet<UserRole>(0);
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Orders> orders = new ArrayList<Orders>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Comment> comments = new ArrayList<Comment>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Likes> likes = new ArrayList<Likes>();
 
 	public User() {
 	}
 
-	public User(String username, String password, boolean enabled) {
+	public User(String username, String password, boolean enabled, String passwordConfirm) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
+		this.passwordConfirm = passwordConfirm;
 	}
 
 	public User(String username, String password, boolean enabled, Set<UserRole> userRoles) {
@@ -112,6 +117,14 @@ public class User implements Serializable, UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPasswordConfirm() {
+		return passwordConfirm;
+	}
+
+	public void setPasswordConfirm(String passwordConfirm) {
+		this.passwordConfirm = passwordConfirm;
 	}
 
 	public boolean isEnabled() {
