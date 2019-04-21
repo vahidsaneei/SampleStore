@@ -45,6 +45,10 @@ public class OrdersServiceImpl implements OrderService {
 	public List<Orders> findOrdersByProduct(Product product) {
 		return ordersDao.findOrdersByProduct(product);
 	}
+	
+	public void removeUsersOrders(User user) {
+		ordersDao.removeUsersOrders(user);
+	}
 
 	@Transactional
 	public List<Product> saleInPeriod(Period period, Product product) {
@@ -81,6 +85,10 @@ public class OrdersServiceImpl implements OrderService {
 
 	public List<Orders> findUserOrders(User user) {
 		return ordersDao.findUserOrders(user);
+	}
+
+	public List<Orders> findUsersUncompleteOrders(User user) {
+		return ordersDao.findUsersUncompleteOrders(user);
 	}
 
 }

@@ -123,7 +123,7 @@ public class OrdersDaoImpl implements OrdersDao {
 			}
 
 		} catch (Exception e) {
-			result = "error " + e.getCause().getMessage();
+			result = "error " + e.getMessage();
 		} finally {
 			session().clear();
 		}
@@ -156,4 +156,16 @@ public class OrdersDaoImpl implements OrdersDao {
 		return userOrders;
 	}
 
+	public List<Orders> findUsersUncompleteOrders(User user) {
+
+		List<Orders> userOrders = session()
+				.createQuery("From Orders where user != :user and finished = 0 ", Orders.class)
+				.setParameter("user", user).list();
+
+		return userOrders;
+	}
+
+	public void removeUsersOrders(User user) {
+		session().createQuery("remove from Orders where user= :user").setParameter("user", user).executeUpdate();
+	}
 }
