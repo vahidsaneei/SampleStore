@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,17 +48,25 @@ public class ProductsController {
 	@Autowired
 	private ServletContext context;
 
-	@RequestMapping(value = { "/products/{page}", "/products/" })
+	@RequestMapping(value = { "products/{page}", "products/" })
 	public ModelAndView getAllProducts(@PathVariable(required = false) Optional<Integer> page) {
 
 		List<Product> products = productService.getAllProducts();
 		PagedListHolder<Product> pagedProduct = new PagedListHolder<Product>(products);
 		pagedProduct.setPageSize(10);
 		Integer maxpage = pagedProduct.getPageCount();
-		Integer pageid = 1;
+		Integer pageid = 0;
 
 		if (page.isPresent())
 			pageid = page.get();
+		else
+			pageid = 1;
+
+		if (pageid <= 1)
+			pageid = 1;
+
+		if (pageid >= maxpage)
+			pageid = maxpage;
 
 		pagedProduct.setPage(pageid);
 
@@ -90,10 +99,9 @@ public class ProductsController {
 	}
 
 	@RequestMapping(value = "/products/remove/{id}", method = RequestMethod.GET)
-	public ModelAndView removeProduct(@PathVariable("id") String id) {
+	public ModelAndView removeProduct(@PathVariable("id") Long id) {
 		ModelAndView model = new ModelAndView("redirect:/products");
-		Long pid = Long.parseLong(id);
-		productService.removeProduct(pid);
+		productService.removeProduct(id);
 		model.addObject("message", "product with id :" + id + " have been removed");
 		return model;
 	}
@@ -123,8 +131,10 @@ public class ProductsController {
 
 	@RequestMapping(value = "products/filesave/{id}", method = RequestMethod.POST)
 	public ModelAndView saveProductFiles(@PathVariable("id") Long id,
-			@RequestParam("headerfile") CommonsMultipartFile headerImage,
-			@RequestParam("upFile") List<CommonsMultipartFile> files) {
+			@RequestParam("headerimage") CommonsMultipartFile headerImage,
+			@RequestParam("subimages") List<CommonsMultipartFile> files,
+			@RequestParam("analysdoc") CommonsMultipartFile analysDoc,
+			@RequestParam("descDoc") CommonsMultipartFile descDoc) {
 
 		ModelAndView model = new ModelAndView("redirect:/products/newprod");
 		model.addObject("product", new Product());
@@ -173,6 +183,18 @@ public class ProductsController {
 
 		return model;
 
+	}
+
+	@RequestMapping(value = "/product/rechargePr/{id}")
+	public ResponseEntity<Integer> setNewQuantity(@PathVariable("id") Long id, HttpServletRequest request) {
+
+		String nquantity = request.getParameter("newqu");
+		Integer recharge = Integer.parseInt(nquantity);
+		Integer updatedQu = productService.rechargeProduct(id, recharge);
+
+		ResponseEntity<Integer> response = new ResponseEntity<Integer>(updatedQu, HttpStatus.OK);
+
+		return response;
 	}
 
 	public User findUser(String username) {
