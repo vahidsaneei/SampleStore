@@ -12,12 +12,20 @@ public interface UserService {
 	String updateUser(User user);
 
 	String addUser(User user);
+	
+	String removeUser(Long id);
 
 	User findByUsername(String username);
 
 	List<User> getAllUsers(String exceptUsername);
 
 	User findById(long id);
+	
+	boolean toggleUserEnable(Long id);
+	
+	boolean toggleUserExpireCredential(Long id);
+	
+	boolean toggleUserLocked(Long id);
 
 	List<Product> getUserFavoriteProducts(User user);
 
