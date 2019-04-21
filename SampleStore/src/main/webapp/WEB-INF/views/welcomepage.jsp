@@ -41,91 +41,49 @@
 			value="${_csrf.token}" />
 	</form>
 	<center>
-		<div align="center">
-			<ul class="nav navbar-nav">
-				<sec:authorize access="isAuthenticated()">
-					<li><a href="${home }/user/showprofile"><span
-							class="glyphicon glyphicon-user">Dear, <sec:authentication
-									property="name" />
-						</span></a></li>
-					<li><a href="${logoutUrl }"><span
-							class="glyphicon glyphicon-log-out">Logout</span></a></li>
-				</sec:authorize>
-				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${home }/login"><span
-							class="glyphicon glyphicon-user">Login</span></a></li>
-				</sec:authorize>
-				<li><a id="cartlink" href="${home }/addtocartlist"><span
-						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${home }/products/1"><span
-							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${home }/users"><span
-							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${home }/orders"><span
-							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${home }/stores"><span
-							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-				</sec:authorize>
-
-				<li class="active"><a href="${home }"><span
-						class="glyphicon glyphicon-home">Home</span></a></li>
-			</ul>
-			<form name="navForm" class="navbar-form navbar-right"
-				action="${home }/search" method="post">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search"
-						name="search">
-					<div class="input-group-btn">
-						<button class="btn btn-default" type="submit">
-							<i class="glyphicon glyphicon-search"></i>
-						</button>
-					</div>
-				</div>
-			</form>
-		</div>
+		<jsp:include page="topmenu.jsp" />
 	</center>
 	<center>
-		<div align="center" class="container">
-			<center>
-
-				<c:forEach var="product" items="${products }">
-					<div class="box">
-						<div class="imgBox">
-							<img alt="image for this product"
-								src="${imagesUrl }productsImages/${product.id}/header.jpg">
-						</div>
-						<a href="showdetails/${product.id }">
-							<center>
-								<div align="center" class="details">
-									<div align="center" class="content">
-										<h2>${product.fullName }</h2>
-										<table border="0">
-											<tr align="center">
-												<td>Type :${product.category}</td>
-											</tr>
-											<tr align="center">
-												<td>Company :${product.companyName}</td>
-											</tr>
-											<c:if test="${product.quantity > 0 }">
-												<tr align="center">
-													<td>Price :${product.price }</td>
-												</tr>
-											</c:if>
-											<c:if test="${product.quantity<=0 }">
-												<tr align="center">
-													<td><p style="color: red;">Not available</p></td>
-												</tr>
-											</c:if>
-										</table>
-									</div>
-								</div>
-							</center>
-						</a>
+		<div class="container">
+			<c:forEach var="product" items="${products }">
+				<div class="box">
+					<div class="imgBox">
+						<img alt="image for this product"
+							src="${imagesUrl }productsImages/${product.id}/header.jpg">
 					</div>
-				</c:forEach>
-			</center>
+					<a href="showdetails/${product.id }">
+						<center>
+							<div align="center" class="details">
+								<div align="center" class="content">
+									<h2>${product.fullName }</h2>
+									<table border="0">
+										<tr align="center">
+											<td>Type :${product.category}</td>
+										</tr>
+										<tr align="center">
+											<td>Company :${product.companyName}</td>
+										</tr>
+										<c:if test="${product.quantity > 0 }">
+											<tr align="center">
+												<td>Price :${product.price }</td>
+											</tr>
+										</c:if>
+										<c:if test="${product.quantity<=0 }">
+											<tr align="center">
+												<td><p style="color: red;">Not available</p></td>
+											</tr>
+										</c:if>
+									</table>
+								</div>
+							</div>
+						</center>
+					</a>
+				</div>
+			</c:forEach>
 		</div>
+	</center>
+	<!-- 		pagination implementing -->
+	<c:if test="${maxPage >1 }">
 		<div align="center">
 			<span> <a class="btn btn-default" href="${home}/1">First</a> <c:choose>
 					<c:when test="${currentpage>1 }">
@@ -150,6 +108,7 @@
 				</c:choose> <a class="btn btn-default" href="${home}/${maxPage}">Last</a>
 			</span>
 		</div>
-	</center>
+	</c:if>
+
 </body>
 </html>
