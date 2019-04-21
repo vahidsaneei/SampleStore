@@ -15,6 +15,7 @@ import com.softup.store.entity.CartItem;
 import com.softup.store.entity.Orders;
 import com.softup.store.entity.User;
 import com.softup.store.interfaces.OrderService;
+import com.softup.store.interfaces.ProductService;
 
 @Controller
 @EnableWebMvc
@@ -23,6 +24,8 @@ public class OrdersController {
 
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private ProductService productService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getOrders() {
@@ -34,13 +37,27 @@ public class OrdersController {
 
 	@RequestMapping(value = "getorder/{id}", method = RequestMethod.GET)
 	public ModelAndView getOrderById(@PathVariable("id") Long id) {
+
 		ModelAndView model = new ModelAndView("orderinfo");
 		Orders orders = orderService.findById(id);
 		User user = orders.getUser();
 		List<CartItem> items = new ArrayList<CartItem>(orders.getItems());
+
 		model.addObject("order", orders);
 		model.addObject("customer", user);
 		model.addObject("items", items);
 		return model;
+	}
+
+	@RequestMapping(value = "removeorders/{id}", method = RequestMethod.GET)
+	public String removeOrders(@PathVariable("id") Long id) {
+		String result = orderService.removeOrders(id);
+
+		if (!result.toLowerCase().contains("error")) {
+			return "redirect:/orders";
+		} else {
+			System.err.println("error ------------>" + result);
+			return "redirect:/orders";
+		}
 	}
 }
