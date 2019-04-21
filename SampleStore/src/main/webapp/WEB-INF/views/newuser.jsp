@@ -26,77 +26,33 @@
 </head>
 <body>
 	<center>
-		<div align="center">
-			<ul>
-				<sec:authorize access="isAuthenticated()">
-					<li><a href="#"><span class="glyphicon glyphicon-user">Dear,
-								<sec:authentication property="name" />
-						</span></a></li>
-					<li><a href="${logoutUrl }"><span
-							class="glyphicon glyphicon-log-out">Logout</span></a></li>
-				</sec:authorize>
-				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath }/login"><span
-							class="glyphicon glyphicon-user">Login</span></a></li>
-				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
-						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="products"><span
-							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="users"><span class="glyphicon glyphicon-list">Users
-								Management</span></a></li>
-					<li><a href="orders"><span
-							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="stores"><span
-							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-				</sec:authorize>
-				<li><a href="search"><span
-						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${pageContext.request.contextPath }"><span
-						class="glyphicon glyphicon-home">Home</span></a></li>
-			</ul>
-		</div>
+		<jsp:include page="topmenu.jsp" />
 	</center>
 	<center>
 		<div align="center">
 			<h2>Welcome to registration page</h2>
 		</div>
 		<div></div>
-		<form:form method="POST" action="saveuser" modelAttribute="user" enctype="multipart/form-data">
+		<form:form method="POST" action="saveuser" modelAttribute="user"
+			enctype="multipart/form-data">
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 			<table>
 				<form:hidden path="id" />
 				<tr>
 					<td><form:label path="username">User Name</form:label></td>
-					<td><form:input path="username" cssClass="form-control" /></td>
+					<td><form:input path="username" cssClass="form-control"/></td>
 				</tr>
 				<tr>
 					<td><form:label path="password">Password</form:label></td>
 					<td><form:password path="password" cssClass="form-control" /></td>
 				</tr>
 				<tr>
-					<td><form:label path="gender">Gender</form:label></td>
-					<td><form:radiobutton path="gender" cssClass="radio-inline"
-							value="M" label="Male" /> <form:radiobutton path="gender"
-							cssClass="radio-inline" value="F" label="Female" /></td>
-				</tr>
-				<tr>
-					<td><form:label path="address">Address</form:label></td>
-					<td><form:textarea path="address" cssClass="form-control"
-							rows="5" cols="30" /></td>
-				</tr>
-				<tr>
-					<td><form:label path="phoneNumber">Mobile number</form:label></td>
-					<td><form:input path="phoneNumber" cssClass="form-control" /></td>
+					<td><form:label path="passwordConfirm">Repeat Password</form:label></td>
+					<td><form:password path="passwordConfirm"
+							cssClass="form-control" /></td>
 				</tr>
 			</table>
-			<div>
-				Select avatar image:<input type="file" name="userimg"  class="file"/>
-			</div>
-			<br>
-
 			<center>
 				<input type="submit" class="btn btn-info" value="Register" />
 			</center>
