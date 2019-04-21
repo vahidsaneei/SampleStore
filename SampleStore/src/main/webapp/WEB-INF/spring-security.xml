@@ -48,7 +48,7 @@
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
 	<!-- set default userdetailsService to extract user details from database -->
-	<authentication-manager>
+	<authentication-manager alias="authenticationManger">
 		<authentication-provider
 			user-service-ref="storeUserDetailsService">
 			<password-encoder ref="encoder" />
