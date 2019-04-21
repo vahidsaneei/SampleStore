@@ -23,6 +23,9 @@
 </head>
 <body onload='document.loginForm.username.focus();'>
 
+	<c:set value="${pageContext.request.contextPath }" var="home" />
+	
+	
 	<div align="center">
 		<h1>Welcome to Store</h1>
 
@@ -53,8 +56,8 @@
 							name="remember" class="form-control" />Remember Me</td>
 					</tr>
 					<tr>
-						<td colspan='2'><input class="btn btn-primary" name="submit"
-							type="submit" value="Login" /><a class="btn btn-success"
+						<td colspan='2'><input class="btn btn-success" name="submit"
+							type="submit" value="Login" /><a class="btn btn-primary"
 							href="${pageContext.request.contextPath }/register">I'm a new
 								User</a></td>
 					</tr>
@@ -63,6 +66,7 @@
 					value="${_csrf.token}" />
 			</form>
 		</div>
+		<a href="${home }" class="btn btn-info">Back to Store</a>
 	</div>
 </body>
 </html>
