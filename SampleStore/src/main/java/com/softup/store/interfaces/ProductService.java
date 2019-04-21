@@ -34,13 +34,11 @@ public interface ProductService {
 
 	List<Product> expireInNextDay(Integer num);
 
-	List<Product> getProductFromStore(String storename);
-
 	List<Product> mostCommentedProduct();
 
 	List<Product> mostOrdered();
 
-	void rechargeProduct(Product product, Integer quantity);
+	Integer rechargeProduct(Long prodId, Integer quantity);
 
 	List<Product> emptyProducts();
 
