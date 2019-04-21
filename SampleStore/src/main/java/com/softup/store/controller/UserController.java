@@ -75,10 +75,11 @@ public class UserController {
 
 	@RequestMapping(value = "users/deleteuser/{id}", method = RequestMethod.GET)
 	public ModelAndView removeUser(@PathVariable("id") Long id) {
-		ModelAndView model = new ModelAndView("userlist");
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		List<User> users = userService.getAllUsers(username);
-		model.addObject("userList", users);
+
+		ModelAndView model = new ModelAndView("redirect:/users");
+		String result = userService.removeUser(id);
+		model.addObject("result", "remove status :" + result);
+		System.err.println("remove status :" + result);
 
 		return model;
 	}
@@ -102,6 +103,14 @@ public class UserController {
 		}
 
 		return model;
+	}
+
+	@RequestMapping(value = "users/toggleenable/{id}", method = RequestMethod.GET)
+	public String toggleUserEnabled(@PathVariable("id") Long id) {
+		
+		userService.toggleUserEnable(id);	
+
+		return "redirect:/users";
 	}
 
 	@ModelAttribute("roleList")
