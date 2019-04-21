@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -43,8 +43,8 @@ import com.softup.store.utils.StoreUtils;
 @EnableWebMvc
 public class StoreController {
 
-	private static final String RESOURCES_IMAGES = "\\resources\\images\\";
-
+	@Autowired
+	AuthenticationManager authenticationManger;
 	@Autowired
 	ProductService productService;
 	@Autowired
@@ -63,7 +63,7 @@ public class StoreController {
 		ModelAndView model = new ModelAndView("welcomepage");
 		List<Product> products = productService.getAllProducts();
 		PagedListHolder<Product> pagedProducts = new PagedListHolder<Product>(products);
-		pagedProducts.setPageSize(8);
+		pagedProducts.setPageSize(16);
 		Integer maxPage = pagedProducts.getPageCount();
 		Integer pid = 0;
 
@@ -113,41 +113,37 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/saveuser", method = RequestMethod.POST)
-	public ModelAndView saveNewUser(@ModelAttribute User user, @RequestParam("userimg") CommonsMultipartFile file) {
+	public ModelAndView saveNewUser(@ModelAttribute User user, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView();
 
-		// set user enabled and account expiry
-		user.setEnabled(true);
-		user.setAccountNonExpired(true);
-		user.setAccountNonLocked(true);
-		user.setCredentialsNonExpired(true);
+		if (user.getPassword().equals(user.getPasswordConfirm())) {
+			// set user enabled and account expiry
+			user.setEnabled(true);
+			user.setAccountNonExpired(true);
+			user.setAccountNonLocked(true);
+			user.setCredentialsNonExpired(true);
 
-		// create user role for customer and ordinary users
-		UserRole role = new UserRole(user, "ROLE_USER");
-		Set<UserRole> roles = new HashSet<UserRole>();
-		roles.add(role);
-		// set user role to USER
-		user.setUserRoles(roles);
-		// invoke service to add user in database
-		String result = userService.addUser(user);
+			// create user role for customer and ordinary users
+			UserRole role = new UserRole(user, "ROLE_USER");
+			Set<UserRole> roles = new HashSet<UserRole>();
+			roles.add(role);
+			// set user role to USER
+			user.setUserRoles(roles);
+			// invoke service to add user in database
+			String result = userService.addUser(user);
 
-		// upload image file if its present
-		if (file.getSize() > 0) {
-			String partname = user.getUsername() + "_" + result;
-			String path = RESOURCES_IMAGES + "usersAvartars";
-			boolean fileUpload = StoreUtils.fileUpload(partname, path, file);
-			if(!fileUpload) {
-				System.err.println("upload failed");
+			if (!result.toLowerCase().startsWith("error")) {
+
+				model.setViewName("loginForm");
+				model.addObject("msg", "registration was successfull, please login manually");
+			} else {
+				model.addObject("error", result);
+				model.setViewName("newuser");
 			}
-		}else {
-			System.err.println("file not found!!!!!!!!1");
-		}
-		if (!result.toLowerCase().startsWith("error")) {
-			model.setViewName("loginForm");
 		} else {
+			model.addObject("error", "repeat password not equal to password!!");
 			model.setViewName("newuser");
-			model.addObject("error", result);
 		}
 		return model;
 	}
@@ -314,7 +310,7 @@ public class StoreController {
 
 			for (int i = 0; i < items.size(); i++) {
 				Integer qSale = items.get(i).getQuantity() * (-1);
-				productService.rechargeProduct(items.get(i).getProduct(), qSale);
+				productService.rechargeProduct(items.get(i).getProduct().getId(), qSale);
 			}
 			model.setViewName("successorder");
 			model.addObject("order", order);
