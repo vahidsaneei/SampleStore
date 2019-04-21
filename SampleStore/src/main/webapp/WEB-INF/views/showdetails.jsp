@@ -34,38 +34,9 @@
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 		</form>
-		<div align="center">
-			<ul>
-				<sec:authorize access="isAuthenticated()">
-					<li><a href="${home }/user/showprofile"><span
-							class="glyphicon glyphicon-user">Dear, <sec:authentication
-									property="name" />
-						</span></a></li>
-					<li><a href="javascript:doLogout()"><span
-							class="glyphicon glyphicon-log-out">Logout</span></a></li>
-				</sec:authorize>
-				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath }/login"><span
-							class="glyphicon glyphicon-user">Login</span></a></li>
-				</sec:authorize>
-				<li><a id="cartlink" href="addtocartlist"><span
-						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${home }/products/1"><span
-							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${home }/users"><span
-							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${home }/orders"><span
-							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${home }/stores"><span
-							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-				</sec:authorize>
-				<li><a href="${home }/searchpage"><span
-						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${home }"><span
-						class="glyphicon glyphicon-home">Home</span></a></li>
-			</ul>
-		</div>
+		<center>
+			<jsp:include page="topmenu.jsp" />
+		</center>
 		<div align="center">
 			<c:choose>
 				<c:when test="${liked != null }">
@@ -85,7 +56,7 @@
 
 			<table class="table" style="width: 100%">
 				<tr align="center">
-					<td rowspan="11" style="background: lightblue; width: 30%"><div
+					<td rowspan="10" style="background: lightblue; width: 30%"><div
 							class="imgbox">
 							<img src="${imagesUrl }productsImages/${product.id}/header.jpg" />
 
@@ -96,12 +67,6 @@
 					<td colspan="2"
 						style="background: lightgray; height: 35px; width: 20%">Product
 						name</td>
-				</tr>
-				<tr align="right">
-					<td colspan="3" style="height: 35px">${product.seller}</td>
-					<td colspan="2"
-						style="background: lightgray; height: 35px; width: 20%">Store
-						Name</td>
 				</tr>
 				<tr align="right">
 					<td colspan="3" style="height: 35px">${product.companyName}</td>
@@ -177,8 +142,7 @@
 				</tr>
 			</table>
 		</div>
-		<div>
-		</div>
+		<div></div>
 		<div>
 			<ul>
 				<c:forEach items="${commentList }" var="comment">
