@@ -33,9 +33,6 @@ public class Product implements Serializable {
 	@Column(name = "full_name", nullable = false)
 	private String fullName;
 
-	@Column(name = "seller_name")
-	private String seller;
-
 	@Column(name = "company_name", nullable = false)
 	private String companyName;
 
@@ -66,13 +63,16 @@ public class Product implements Serializable {
 	@Column(name = "description", nullable = true)
 	private String description;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@Column(name = "finishproduction", nullable = false, columnDefinition = "tinyint(1) default 0")
+	private boolean finishProduct;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<CartItem> items;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "product")
 	private List<Comment> comments = new ArrayList<Comment>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "product")
 	private List<Likes> likes = new ArrayList<Likes>();
 
 	public Product(String fullName, String companyName, Date expiryDate, Integer quantity, BigDecimal price,
@@ -96,11 +96,10 @@ public class Product implements Serializable {
 		this.price = price;
 	}
 
-	public Product(Long id, String fullName, String seller, String companyName, Integer quantity, String category) {
+	public Product(Long id, String fullName, String companyName, Integer quantity, String category) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
-		this.seller = seller;
 		this.companyName = companyName;
 		this.quantity = quantity;
 	}
@@ -134,14 +133,6 @@ public class Product implements Serializable {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
-	}
-
-	public String getSeller() {
-		return seller;
-	}
-
-	public void setSeller(String seller) {
-		this.seller = seller;
 	}
 
 	public String getCompanyName() {
@@ -204,12 +195,43 @@ public class Product implements Serializable {
 		this.likeCount = likeCount;
 	}
 
+	public Set<CartItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<CartItem> items) {
+		this.items = items;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Likes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Likes> likes) {
+		this.likes = likes;
+	}
+
+	public boolean isFinishProduct() {
+		return finishProduct;
+	}
+
+	public void setFinishProduct(boolean finishProduct) {
+		this.finishProduct = finishProduct;
+	}
+
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", fullName=" + fullName + ", seller=" + seller + ", companyName=" + companyName
-				+ ", createdDate=" + createdDate + ", expiryDate=" + expiryDate + ", likeCount=" + likeCount
-				+ ", quantity=" + quantity + ", price=" + price + ", category=" + category + ", description="
-				+ description + "]";
+		return "Product [id=" + id + ", fullName=" + fullName + ", companyName=" + companyName + ", createdDate="
+				+ createdDate + ", expiryDate=" + expiryDate + ", likeCount=" + likeCount + ", quantity=" + quantity
+				+ ", price=" + price + ", category=" + category + ", description=" + description + "]";
 	}
 
 	@Override
@@ -227,7 +249,6 @@ public class Product implements Serializable {
 		result = prime * result + ((likeCount == null) ? 0 : likeCount.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
-		result = prime * result + ((seller == null) ? 0 : seller.hashCode());
 		return result;
 	}
 
@@ -295,35 +316,7 @@ public class Product implements Serializable {
 				return false;
 		} else if (!quantity.equals(other.quantity))
 			return false;
-		if (seller == null) {
-			if (other.seller != null)
-				return false;
-		} else if (!seller.equals(other.seller))
-			return false;
+
 		return true;
-	}
-
-	public Set<CartItem> getItems() {
-		return items;
-	}
-
-	public void setItems(Set<CartItem> items) {
-		this.items = items;
-	}
-
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public List<Likes> getLikes() {
-		return likes;
-	}
-
-	public void setLikes(List<Likes> likes) {
-		this.likes = likes;
 	}
 }
