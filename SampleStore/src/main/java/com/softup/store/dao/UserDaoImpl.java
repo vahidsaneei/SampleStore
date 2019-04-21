@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.softup.store.entity.Likes;
 import com.softup.store.entity.Product;
 import com.softup.store.entity.User;
+import com.softup.store.interfaces.OrderService;
 import com.softup.store.interfaces.UserDao;
 
 @Repository
@@ -21,7 +22,8 @@ public class UserDaoImpl implements UserDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
-
+	@Autowired
+	OrderService orderService;
 	@Autowired
 	PasswordEncoder encoder;
 
@@ -74,9 +76,36 @@ public class UserDaoImpl implements UserDao {
 		return users;
 	}
 
+	public String removeUser(Long id) {
+
+		String result = "";
+		User user = findById(id);
+
+		if (user != null) {
+//			List<Orders> userOrders = orderService.findUsersUncompleteOrders(user);
+//			if (userOrders.size() == 0) {
+			try {
+				session().remove(user);
+				session().flush();
+				result = "success";
+			} catch (Exception e) {
+				result = "error :" + e.getMessage();
+			} finally {
+				session().clear();
+			}
+		}
+//		else {
+//				result = "this user have some uncompleted order and cannot remove user";
+//			}
+//		} else {
+//			result = "user not found";
+//		}
+
+		return result;
+	}
+
 	public User findById(long id) {
 		User user = session().get(User.class, id);
-
 		return user;
 	}
 
@@ -95,7 +124,6 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public List<User> getDisabledUser() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -151,6 +179,57 @@ public class UserDaoImpl implements UserDao {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = findByUsername(username);
 		return user;
+	}
+
+	public boolean toggleUserEnable(Long id) {
+
+		User user = findById(id);
+
+		if (user.isEnabled())
+			user.setEnabled(false);
+		else
+			user.setEnabled(true);
+
+		String res = updateUser(user);
+
+		if (!res.toLowerCase().contains("error"))
+			return true;
+
+		return false;
+	}
+
+	public boolean toggleUserExpireCredential(Long id) {
+
+		User user = findById(id);
+
+		if (user.isCredentialsNonExpired())
+			user.setCredentialsNonExpired(false);
+		else
+			user.setCredentialsNonExpired(true);
+
+		String res = updateUser(user);
+
+		if (!res.toLowerCase().contains("error"))
+			return true;
+
+		return false;
+	}
+
+	public boolean toggleUserLocked(Long id) {
+
+		User user = findById(id);
+
+		if (user.isAccountNonLocked())
+			user.setAccountNonLocked(false);
+		else
+			user.setAccountNonLocked(true);
+
+		String res = updateUser(user);
+
+		if (!res.toLowerCase().contains("error"))
+			return true;
+
+		return false;
 	}
 
 }

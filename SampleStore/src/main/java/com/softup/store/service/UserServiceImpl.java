@@ -35,50 +35,42 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public User findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.findById(id);
 	}
 
 	@Transactional
 	public List<User> findByAddress(String address) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.findByAddress(address);
 	}
 
 	@Transactional
 	public List<User> findByPhoneNumber(String number) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.findByPhoneNumber(number);
 	}
 
 	@Transactional
 	public List<User> getDisabledUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getDisabledUser();
 	}
 
 	@Transactional
 	public List<User> getExpiredUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getExpiredUser();
 	}
 
 	@Transactional
 	public List<User> getLockedUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getLockedUser();
 	}
 
 	@Transactional
 	public List<User> getExpireCredentialUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getExpireCredentialUser();
 	}
 
 	@Transactional
 	public void resetPassword(User user, String newPass) {
-		// TODO Auto-generated method stub
-
+		userDao.resetPassword(user, newPass);
 	}
 
 	@Transactional
@@ -92,6 +84,25 @@ public class UserServiceImpl implements UserService {
 
 	public User getCurrentUser() {
 		return userDao.getCurrentUser();
+	}
+	@Transactional
+	public String removeUser(Long id) {
+		return userDao.removeUser(id);
+	}
+	@Transactional
+	public boolean toggleUserEnable(Long id) {
+
+		return userDao.toggleUserEnable(id);
+	}
+	@Transactional
+	public boolean toggleUserExpireCredential(Long id) {
+
+		return userDao.toggleUserExpireCredential(id);
+	}
+	@Transactional
+	public boolean toggleUserLocked(Long id) {
+
+		return userDao.toggleUserLocked(id);
 	}
 
 }
