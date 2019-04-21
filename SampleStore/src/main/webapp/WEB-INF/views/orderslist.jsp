@@ -4,7 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+"http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -30,38 +32,7 @@
 	<jsp:useBean id="today" class="java.util.Date" />
 	<!-- csrf for log out-->
 	<center>
-		<div align="center">
-			<ul>
-				<sec:authorize access="isAuthenticated()">
-					<li><a href="user/showprofile"><span
-							class="glyphicon glyphicon-user">Dear, <sec:authentication
-									property="name" />
-						</span></a></li>
-					<li><a href="${logoutUrl }" onclick="logoutPerform();"><span
-							class="glyphicon glyphicon-log-out">Logout</span></a></li>
-				</sec:authorize>
-				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${ appurl}/login"><span
-							class="glyphicon glyphicon-user">Login</span></a></li>
-				</sec:authorize>
-				<li><a id="cartlink" href="${appurl }/addtocartlist"><span
-						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${appurl }/products"><span
-							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${appurl }/users"><span
-							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${appurl }/orders"><span
-							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${appurl }/stores"><span
-							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-				</sec:authorize>
-				<li><a href="${appurl }/search"><span
-						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${appurl}"><span
-						class="glyphicon glyphicon-home">Home</span></a></li>
-			</ul>
-		</div>
+		<jsp:include page="topmenu.jsp" />
 	</center>
 	<div align="center">
 		<p>
@@ -102,13 +73,15 @@
 									</c:when>
 									<c:otherwise>In order yet</c:otherwise>
 								</c:choose></td>
-							<td colspan="3"><c:choose>
-									<c:when test="${order.success }">
-										<a href="#" class="btn btn-warning">Cancel order</a>
-										<a href="#" class="btn btn-info">Edit</a>
-									</c:when>
-								</c:choose><a href="${appurl }/orders/getorder/${order.id}"
-								class="btn btn-success">Show Details</a></td>
+							<td colspan="4"><span class="btn-group"><c:choose>
+										<c:when test="${!order.success }">
+											<a href="#" class="btn btn-warning">Cancel order</a>
+											<a href="#" class="btn btn-info">Edit</a>
+										</c:when>
+									</c:choose> <a href="${appurl }/orders/getorder/${order.id}"
+									class="btn btn-success">Show Details</a> <a
+									href="${appurl }/orders/removeorders/${order.id}"
+									class="btn btn-danger">Delete</a> </span></td>
 						</tr>
 					</c:forEach>
 				</table>
