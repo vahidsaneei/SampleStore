@@ -43,6 +43,9 @@ public class Orders implements Serializable {
 	@Column(name = "success", nullable = true, columnDefinition = "tinyint(1) default 0")
 	private boolean success;
 
+	@Column(name = "finished", nullable = true, columnDefinition = "tinyint(1) default 0")
+	private boolean finished;
+
 	@Column(name = "usercancel", nullable = true, columnDefinition = "tinyint(1) default 0")
 	private boolean canceledByUser;
 
@@ -63,7 +66,7 @@ public class Orders implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
 	private User user;
-
+	
 	public Orders() {
 	}
 
@@ -112,6 +115,14 @@ public class Orders implements Serializable {
 
 	public Set<CartItem> getItems() {
 		return items;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 	public void setItems(Set<CartItem> items) {
