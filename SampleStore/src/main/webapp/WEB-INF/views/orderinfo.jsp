@@ -28,38 +28,7 @@
 	<c:set value="${pageContext.request.contextPath }" var="appurl"></c:set>
 	<c:url value="/logout" var="logoutUrl" />
 	<center>
-		<div align="center">
-			<ul>
-				<sec:authorize access="isAuthenticated()">
-					<li><a href="${appurl }/user/showprofile"><span
-							class="glyphicon glyphicon-user">Dear, <sec:authentication
-									property="name" />
-						</span></a></li>
-					<li><a href="${logoutUrl }"><span
-							class="glyphicon glyphicon-log-out">Logout</span></a></li>
-				</sec:authorize>
-				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${appurl }/login"><span
-							class="glyphicon glyphicon-user">Login</span></a></li>
-				</sec:authorize>
-				<li><a id="cartlink" href="${appurl }/addtocartlist"><span
-						class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a href="${appurl }/products"><span
-							class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-					<li><a href="${appurl }/users"><span
-							class="glyphicon glyphicon-list">Users Management</span></a></li>
-					<li><a href="${appurl }/orders"><span
-							class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-					<li><a href="${appurl }/stores"><span
-							class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-				</sec:authorize>
-				<li><a href="${appurl }/search"><span
-						class="glyphicon glyphicon-search">Search</span></a></li>
-				<li><a href="${appurl }"><span
-						class="glyphicon glyphicon-home">Home</span></a></li>
-			</ul>
-		</div>
+		<jsp:include page="topmenu.jsp" />
 	</center>
 	<center>
 
@@ -103,6 +72,12 @@
 					<td colspan="2">${total }</td>
 				</tr>
 			</table>
+		</div>
+		<div>
+			<c:if test="${not empty pravailablity }">
+				<h2 style="color: red">${pravailablity }</h2>
+			</c:if>
+			<div></div>
 		</div>
 		<div>
 			<h3 class="text text-primary">Customer information</h3>

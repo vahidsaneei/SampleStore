@@ -27,41 +27,11 @@
 
 	<c:set var="productPath"
 		value="${pageContext.request.contextPath }/products/" />
-	<c:set var="appurl" value="${pageContext.request.contextPath }" />
+	<c:set var="home" value="${pageContext.request.contextPath }" />
 	<c:url value="/logout" var="logoutUrl" />
-
-	<div align="center">
-		<ul>
-			<sec:authorize access="isAuthenticated()">
-				<li><a href="${appurl }/user/showprofile"><span
-						class="glyphicon glyphicon-user">Dear, <sec:authentication
-								property="name" />
-					</span></a></li>
-				<li><a href="${logoutUrl }"><span
-						class="glyphicon glyphicon-log-out">Logout</span></a></li>
-			</sec:authorize>
-			<sec:authorize access="!isAuthenticated()">
-				<li><a href="${appurl }/login"><span
-						class="glyphicon glyphicon-user">Login</span></a></li>
-			</sec:authorize>
-			<li><a id="cartlink" href="${appurl }/addtocartlist"><span
-					class="glyphicon glyphicon-shopping-cart">Cart</span></a></li>
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<li><a href="${appurl }/products"><span
-						class="glyphicon glyphicon-list-alt">Product Management</span></a></li>
-				<li><a href="${appurl }/users"><span
-						class="glyphicon glyphicon-list">Users Management</span></a></li>
-				<li><a href="${appurl }/orders"><span
-						class="glyphicon glyphicon-pushpin">Orders Management</span></a></li>
-				<li><a href="${appurl }/stores"><span
-						class="glyphicon glyphicon-floppy-disk">Store Management</span></a></li>
-			</sec:authorize>
-			<li><a href="${appurl }/search"><span
-					class="glyphicon glyphicon-search">Search</span></a></li>
-			<li><a href="${appurl }"><span
-					class="glyphicon glyphicon-home">Home</span></a></li>
-		</ul>
-	</div>
+	<center>
+		<jsp:include page="topmenu.jsp" />
+	</center>
 	<div align="center">
 		<h2 class="text text-primary bg-info">Add and Update</h2>
 	</div>
@@ -75,10 +45,6 @@
 				<tr>
 					<td>Name</td>
 					<td><form:input path="fullName" cssClass="form-control" /></td>
-				</tr>
-				<tr>
-					<td>Store name</td>
-					<td><form:input path="seller" cssClass="form-control" /></td>
 				</tr>
 				<tr>
 					<td>Company name</td>
