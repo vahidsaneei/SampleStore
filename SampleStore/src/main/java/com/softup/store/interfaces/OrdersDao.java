@@ -23,6 +23,10 @@ public interface OrdersDao {
 	List<Orders> findByDate(Date date);
 
 	List<Orders> findUserOrders(User user);
+	
+	List<Orders> findUsersUncompleteOrders(User user);
+	
+	void removeUsersOrders(User user);
 
 	List<Orders> canceledOrders();
 
